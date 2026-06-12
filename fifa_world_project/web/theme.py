@@ -290,12 +290,25 @@ def inject_theme():
             min-width: auto !important;
             max-width: 280px !important;
         }}
-        /* 收起/展开按钮手机端可见 */
+        /* 收起/展开按钮手机端可见 + 修正位置 */
         [data-testid="stSidebarCollapseButton"] {{
             display: flex !important;
+            position: absolute !important;
+            right: 8px !important;
+            top: 8px !important;
+            left: auto !important;
+            z-index: 100 !important;
         }}
         [data-testid="collapsedControl"] {{
             display: flex !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 50% !important;
+            z-index: 9999 !important;
+            background: {THEME['primary']} !important;
+            color: #fff !important;
+            border-radius: 0 8px 8px 0 !important;
+            padding: 16px 6px !important;
         }}
 
         /* ---- 内容区 ---- */
@@ -473,7 +486,7 @@ def inject_theme():
             font-size: 2.5rem !important;
         }}
 
-        /* ---- 侧边栏：允许收起 ---- */
+        /* ---- 侧边栏：允许收起，按钮位置修正 ---- */
         section[data-testid="stSidebar"] {{
             width: auto !important;
             min-width: auto !important;
@@ -481,9 +494,22 @@ def inject_theme():
         }}
         [data-testid="stSidebarCollapseButton"] {{
             display: flex !important;
+            position: absolute !important;
+            right: 6px !important;
+            top: 6px !important;
+            left: auto !important;
+            z-index: 100 !important;
         }}
         [data-testid="collapsedControl"] {{
             display: flex !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 50% !important;
+            z-index: 9999 !important;
+            background: {THEME['primary']} !important;
+            color: #fff !important;
+            border-radius: 0 6px 6px 0 !important;
+            padding: 12px 4px !important;
         }}
 
         /* ---- 内容区 ---- */
