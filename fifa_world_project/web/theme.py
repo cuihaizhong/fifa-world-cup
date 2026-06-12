@@ -26,15 +26,10 @@ def inject_theme():
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏：桌面端始终展开 === */
+    /* === 侧边栏基础样式 === */
     section[data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
-        width: 300px !important;
-        min-width: 300px !important;
-        max-width: 300px !important;
-        transform: none !important;
-        transition: none !important;
     }}
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
@@ -46,6 +41,23 @@ def inject_theme():
     }}
     [data-testid="stSidebar"] p {{
         font-size: 0.95rem !important;
+    }}
+
+    /* === 桌面端(≥769px)：侧边栏固定300px常开，不可收起 === */
+    @media (min-width: 769px) {{
+        section[data-testid="stSidebar"] {{
+            width: 300px !important;
+            min-width: 300px !important;
+            max-width: 300px !important;
+            transform: none !important;
+            transition: none !important;
+        }}
+        [data-testid="stSidebarCollapseButton"] {{
+            display: none !important;
+        }}
+        [data-testid="collapsedControl"] {{
+            display: none !important;
+        }}
     }}
 
     /* 登录页：隐藏侧边栏 */
@@ -272,13 +284,11 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏手机端允许收起 */
+        /* 侧边栏手机端允许收起(不阻止transform/transition，让Streamlit动画正常工作) */
         section[data-testid="stSidebar"] {{
             width: auto !important;
             min-width: auto !important;
             max-width: 280px !important;
-            transform: none !important;
-            transition: none !important;
         }}
         /* 收起/展开按钮手机端可见 */
         [data-testid="stSidebarCollapseButton"] {{
