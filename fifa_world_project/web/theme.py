@@ -26,21 +26,13 @@ def inject_theme():
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏：强制始终可见 === */
+    /* === 侧边栏 === */
     section[data-testid="stSidebar"] {{
-        background-color: {THEME['card_bg']} !important;
-        border-right: 1px solid {THEME['border']} !important;
-        width: 300px !important;
-        min-width: 300px !important;
-        transform: none !important;
+        background-color: {THEME['card_bg']};
+        border-right: 1px solid {THEME['border']};
     }}
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
-    }}
-    /* 侧边栏收起按钮始终可见 */
-    [data-testid="stSidebarCollapseButton"] {{
-        visibility: visible !important;
-        display: flex !important;
     }}
     /* 侧边栏导航字体加大 */
     [data-testid="stSidebar"] a {{
@@ -49,6 +41,15 @@ def inject_theme():
     }}
     [data-testid="stSidebar"] p {{
         font-size: 0.95rem !important;
+    }}
+
+    /* 侧边栏收起/展开按钮始终可见（Streamlit默认hover才显示） */
+    [data-testid="stSidebarCollapseButton"] {{
+        visibility: visible !important;
+    }}
+    [data-testid="collapsedControl"] {{
+        display: flex !important;
+        visibility: visible !important;
     }}
 
     /* === 主区域 === */
@@ -267,10 +268,9 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏在手机上缩小但仍可见 */
+        /* 侧边栏在手机上稍窄 */
         section[data-testid="stSidebar"] {{
-            width: 260px !important;
-            min-width: 260px !important;
+            max-width: 280px;
         }}
         /* 侧边栏在手机上变窄 + 浮层效果 */
         section[data-testid="stSidebar"] {{
@@ -455,8 +455,7 @@ def inject_theme():
 
         /* ---- 侧边栏 ---- */
         section[data-testid="stSidebar"] {{
-            width: 230px !important;
-            min-width: 230px !important;
+            max-width: 240px;
         }}
 
         /* ---- 内容区 ---- */
