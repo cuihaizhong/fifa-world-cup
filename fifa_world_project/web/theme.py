@@ -209,6 +209,62 @@ def inject_theme():
         text-align: center; color: {THEME['text_secondary']}; font-size: 0.8rem;
         padding: 20px 0; border-top: 1px solid {THEME['border']}; margin-top: 40px;
     }}
+
+    /* ========== 手机端适配 ========== */
+    @media (max-width: 768px) {{
+        html {{ font-size: 14px; }}
+        h1 {{ font-size: 1.5rem !important; }}
+        h2 {{ font-size: 1.2rem !important; }}
+
+        /* 侧边栏在手机上允许收起 */
+        [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
+        [data-testid="collapsedControl"] {{ display: flex !important; }}
+
+        /* 轮播缩小 */
+        .team-chip {{
+            padding: 10px 14px; min-width: 80px; border-radius: 10px; gap: 4px;
+        }}
+        .team-chip-flag {{ font-size: 2rem; }}
+        .team-chip-name {{ font-size: 0.85rem; }}
+        .team-carousel-track {{ gap: 10px; }}
+
+        /* 首页居中 */
+        .home-center {{ min-height: 50vh; padding: 0 8px; }}
+
+        /* 卡片 */
+        .match-card {{ padding: 12px; }}
+        .stat-card {{ padding: 12px 8px; }}
+        .stat-value {{ font-size: 1.4rem; }}
+
+        /* 内容区 */
+        .block-container, .stMainBlockContainer, .main {{
+            padding: 0.5rem 0.8rem !important;
+        }}
+
+        /* 按钮加大触控区 */
+        .stButton > button {{
+            min-height: 44px; font-size: 1rem;
+        }}
+
+        /* 表格横向滚动 */
+        .stDataFrame {{ overflow-x: auto; }}
+
+        /* 列竖向堆叠 */
+        [data-testid="column"] {{
+            flex: 1 1 100% !important;
+        }}
+    }}
+
+    @media (max-width: 480px) {{
+        html {{ font-size: 13px; }}
+        .team-chip {{
+            padding: 8px 10px; min-width: 64px; gap: 2px;
+        }}
+        .team-chip-flag {{ font-size: 1.5rem; }}
+        .team-chip-name {{ font-size: 0.7rem; }}
+        .team-carousel-track {{ gap: 6px; }}
+        .home-center {{ min-height: 40vh; }}
+    }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
