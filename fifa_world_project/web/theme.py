@@ -69,11 +69,34 @@ def inject_theme():
     [data-testid="stMetricValue"] {{ color: {THEME['text_primary']} !important; }}
     [data-testid="stMetricLabel"] {{ color: {THEME['text_secondary']} !important; }}
 
-    /* === DataFrame === */
-    .stDataFrame, [data-testid="stTable"] {{
+    /* === DataFrame / 表格 === */
+    .stDataFrame, [data-testid="stTable"], .stTable {{
         background: {THEME['card_bg']} !important;
     }}
     .stDataFrame * {{ color: {THEME['text_primary']} !important; }}
+    [data-testid="stTable"] table, .stTable table {{
+        background: {THEME['card_bg']} !important;
+    }}
+    [data-testid="stTable"] th, .stTable th {{
+        background: {THEME['bg_dark']} !important;
+        color: {THEME['text_primary']} !important;
+        border-color: {THEME['border']} !important;
+    }}
+    [data-testid="stTable"] td, .stTable td {{
+        background: {THEME['card_bg']} !important;
+        color: {THEME['text_secondary']} !important;
+        border-color: {THEME['border']} !important;
+    }}
+    [data-testid="stTable"] tr:nth-child(even) td, .stTable tr:nth-child(even) td {{
+        background: #161c3a !important;
+    }}
+    /* DataFrame 内部全量覆盖 */
+    [data-testid="stDataFrame"] div[role="grid"] {{
+        background: {THEME['card_bg']} !important;
+    }}
+    [data-testid="stDataFrame"] [data-testid="stDataFrameResizable"] {{
+        background: {THEME['card_bg']} !important;
+    }}
 
     /* === 按钮 === */
     .stButton > button {{

@@ -129,10 +129,45 @@ def show_team_detail(team):
 
     # TAB 4: 历史成绩
     with tab4:
-        honors = baidu_data.get("history", {}).get("honors", []) if isinstance(baidu_data.get("history"), dict) else []
+        history_data = baidu_data.get("history", {}) if isinstance(baidu_data.get("history"), dict) else {}
+        honors = history_data.get("honors", []) if isinstance(history_data, dict) else []
+
         if honors:
-            for h in honors:
-                st.markdown(f'<div style="background:{THEME["card_bg"]};border-radius:8px;padding:8px 14px;margin:4px 0;">🏆 {h}</div>', unsafe_allow_html=True)
+            # 解析破碎的 Baidu JSON 荣誉数据
+            import re
+            joined = "".join(str(h) for h in honors)
+            # 匹配: 标题","list":["年份"... 或 标题","mark_desc":"描述"...
+            entries = re.split(r'\},\{|\},\s*\{', joined)
+            shown = set()
+            for entry in entries:
+                # 提取标题 (第一个中文/英文名称)
+                title_m = re.match(r'"?([^"]+)"', entry)
+                title = title_m.group(1) if title_m else ""
+                # 去重
+                if not title or title in shown:
+                    continue
+                shown.add(title)
+
+                # 提取年份列表
+                years = []
+                year_m = re.search(r'"list"\s*:\s*\[(.*?)\]', entry)
+                if year_m:
+                    years = re.findall(r'"(\d{4})"', year_m.group(1))
+
+                # 提取描述
+                desc = ""
+                desc_m = re.search(r'"mark_desc"\s*:\s*"([^"]*)"', entry)
+                if desc_m:
+                    desc = desc_m.group(1)
+
+                # 构建显示文本
+                parts = [f"🏆 {title}"]
+                if years:
+                    parts.append(f"({'、'.join(years)})")
+                if desc:
+                    parts.append(f"— {desc}")
+
+                st.markdown(f'<div style="background:{THEME["card_bg"]};border-radius:8px;padding:10px 16px;margin:6px 0;border-left:3px solid {THEME["primary"]};">{" ".join(parts)}</div>', unsafe_allow_html=True)
         else:
             st.info("暂无历史荣誉数据")
 
