@@ -174,7 +174,7 @@ def main():
     if team_code:
         from web.detail_view import show_team_detail
         store = st.session_state.store
-        code = team_code.upper()
+        code = str(team_code).upper()
         team = store.get_team_by_code(code)
         if team:
             show_team_detail(team)
