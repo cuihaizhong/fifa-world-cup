@@ -233,60 +233,202 @@ def inject_theme():
         padding: 20px 0; border-top: 1px solid {THEME['border']}; margin-top: 40px;
     }}
 
-    /* ========== 手机端适配 ========== */
-    @media (max-width: 768px) {{
-        html {{ font-size: 14px; }}
-        h1 {{ font-size: 1.5rem !important; }}
-        h2 {{ font-size: 1.2rem !important; }}
+    /* ================================================================
+       手机端 & 平板适配
+       ================================================================ */
 
-        /* 侧边栏在手机上允许收起 */
+    /* ---------- 平板竖屏 / 小屏笔记本 (≤1024px) ---------- */
+    @media (max-width: 1024px) {{
+        /* 侧边栏在小平板上允许关闭 */
         [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
         [data-testid="collapsedControl"] {{ display: flex !important; }}
 
-        /* 轮播缩小 */
-        .team-chip {{
-            padding: 10px 14px; min-width: 80px; border-radius: 10px; gap: 4px;
-        }}
-        .team-chip-flag {{ font-size: 2rem; }}
-        .team-chip-name {{ font-size: 0.85rem; }}
-        .team-carousel-track {{ gap: 10px; }}
-
-        /* 首页居中 */
-        .home-center {{ min-height: 50vh; padding: 0 8px; }}
-
-        /* 卡片 */
-        .match-card {{ padding: 12px; }}
-        .stat-card {{ padding: 12px 8px; }}
-        .stat-value {{ font-size: 1.4rem; }}
-
-        /* 内容区 */
-        .block-container, .stMainBlockContainer, .main {{
-            padding: 0.5rem 0.8rem !important;
-        }}
-
-        /* 按钮加大触控区 */
-        .stButton > button {{
-            min-height: 44px; font-size: 1rem;
-        }}
-
-        /* 表格横向滚动 */
-        .stDataFrame {{ overflow-x: auto; }}
-
-        /* 列竖向堆叠 */
+        /* 列基本堆叠，但 4 列可保留 2 列 */
         [data-testid="column"] {{
-            flex: 1 1 100% !important;
+            flex: 1 1 50% !important;
+            min-width: 280px;
+        }}
+
+        .block-container, .stMainBlockContainer, .main {{
+            padding: 0.8rem 1rem !important;
         }}
     }}
 
-    @media (max-width: 480px) {{
-        html {{ font-size: 13px; }}
+    /* ---------- 手机横屏 / 小平板 (≤768px) ---------- */
+    @media (max-width: 768px) {{
+        html {{ font-size: 15px; }}
+        body {{ font-size: 0.95rem; }}
+
+        /* ---- 标题 ---- */
+        h1 {{ font-size: 1.5rem !important; }}
+        h2 {{ font-size: 1.2rem !important; }}
+        h3 {{ font-size: 1rem !important; }}
+
+        /* ---- 侧边栏：手机端允许收起，默认关闭 ---- */
+        [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
+        [data-testid="collapsedControl"] {{ display: flex !important; }}
+
+        /* ---- 内容区 ---- */
+        .block-container, .stMainBlockContainer, .main {{
+            padding: 0.4rem 0.6rem !important;
+        }}
+
+        /* ---- 列全部竖向堆叠 ---- */
+        [data-testid="column"] {{
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }}
+        /* 列之间减小间距 */
+        [data-testid="column"] + [data-testid="column"] {{
+            margin-top: 0.5rem;
+        }}
+
+        /* ---- 首页 ---- */
+        .home-center {{
+            min-height: 60vh; padding: 0 4px;
+        }}
+        .home-center h1 {{
+            font-size: 1.4rem !important;
+        }}
+
+        /* ---- 轮播 ---- */
+        .team-carousel-wrapper {{
+            padding: 8px 0; margin: 10px 0;
+        }}
+        .team-carousel-track {{ gap: 8px; }}
         .team-chip {{
-            padding: 8px 10px; min-width: 64px; gap: 2px;
+            padding: 10px 14px; min-width: 80px; border-radius: 12px; gap: 4px;
+            border-width: 1.5px;
+        }}
+        .team-chip-flag {{ font-size: 2rem; }}
+        .team-chip-name {{ font-size: 0.85rem; }}
+
+        /* ---- 卡片 ---- */
+        .match-card {{
+            padding: 12px 10px; margin: 8px 0;
+        }}
+        .match-card [style*="flex: 1"] {{
+            font-size: 0.9rem !important;
+        }}
+        .stat-card {{
+            padding: 12px 6px; margin-bottom: 6px;
+        }}
+        .stat-value {{ font-size: 1.4rem; }}
+
+        /* ---- 进度条 ---- */
+        .progress-container {{ height: 6px; margin: 8px 0 6px 0; }}
+
+        /* ---- 按钮：全宽 + 大触控区 ---- */
+        .stButton > button {{
+            width: 100% !important;
+            min-height: 44px; font-size: 1rem; border-radius: 10px;
+        }}
+
+        /* ---- 下拉框 ---- */
+        .stSelectbox [role="combobox"] {{
+            font-size: 0.95rem; min-height: 40px;
+        }}
+
+        /* ---- 表格 / DataFrame ---- */
+        .stDataFrame, [data-testid="stTable"], .stTable {{
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+        }}
+        [data-testid="stTable"] th, .stTable th {{
+            font-size: 0.8rem; padding: 6px 8px;
+        }}
+        [data-testid="stTable"] td, .stTable td {{
+            font-size: 0.78rem; padding: 5px 8px;
+        }}
+
+        /* ---- Metric ---- */
+        [data-testid="stMetricValue"] {{
+            font-size: 1.3rem !important;
+        }}
+
+        /* ---- Tab 标签：可横向滚动 ---- */
+        [data-testid="stTabs"] {{
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            flex-wrap: nowrap;
+        }}
+        button[data-baseweb="tab"] {{
+            font-size: 0.85rem; padding: 6px 12px; white-space: nowrap;
+            flex-shrink: 0;
+        }}
+
+        /* ---- 展开器 ---- */
+        .streamlit-expanderHeader {{
+            font-size: 0.9rem; padding: 10px 12px;
+        }}
+
+        /* ---- 详情页 Header (国旗+队名+链接) ---- */
+        /* 第一个 column 国旗缩小 */
+        .stColumn:first-child [style*="font-size:5rem"] {{
+            font-size: 3rem !important;
+        }}
+
+        /* ---- 分割线 ---- */
+        hr {{ margin: 12px 0; }}
+
+        /* ---- 页脚 ---- */
+        .footer {{
+            font-size: 0.7rem; padding: 12px 0; margin-top: 20px;
+        }}
+    }}
+
+    /* ---------- 小屏手机 (≤480px) ---------- */
+    @media (max-width: 480px) {{
+        html {{ font-size: 14px; }}
+        body {{ font-size: 0.9rem; }}
+
+        h1 {{ font-size: 1.3rem !important; }}
+
+        /* ---- 首页标题缩小 ---- */
+        .home-center h1 {{
+            font-size: 1.2rem !important;
+        }}
+
+        /* ---- 轮播 ---- */
+        .team-carousel-track {{ gap: 5px; }}
+        .team-chip {{
+            padding: 8px 10px; min-width: 64px; border-radius: 10px; gap: 2px;
         }}
         .team-chip-flag {{ font-size: 1.5rem; }}
         .team-chip-name {{ font-size: 0.7rem; }}
-        .team-carousel-track {{ gap: 6px; }}
-        .home-center {{ min-height: 40vh; }}
+
+        /* ---- 首页高度 ---- */
+        .home-center {{ min-height: 45vh; }}
+
+        /* ---- 卡片 ---- */
+        .match-card {{ padding: 10px 8px; }}
+        .stat-card {{ padding: 10px 4px; }}
+
+        /* ---- 按钮 ---- */
+        .stButton > button {{
+            min-height: 42px; font-size: 0.95rem;
+        }}
+
+        /* ---- Metric ---- */
+        [data-testid="stMetricValue"] {{
+            font-size: 1.1rem !important;
+        }}
+        [data-testid="stMetricLabel"] {{
+            font-size: 0.7rem !important;
+        }}
+
+        /* ---- Tab 标签 ---- */
+        button[data-baseweb="tab"] {{
+            font-size: 0.78rem; padding: 5px 10px;
+        }}
+
+        /* ---- 详情国旗 ---- */
+        .stColumn:first-child [style*="font-size:5rem"] {{
+            font-size: 2.5rem !important;
+        }}
+
+        /* ---- 内容区 ---- */
+        .block-container, .stMainBlockContainer, .main {{
+            padding: 0.3rem 0.5rem !important;
+        }}
     }}
     </style>
     """
