@@ -4,6 +4,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
+import streamlit.components.v1 as components
 from datetime import date, datetime
 
 from config import DB_PATH
@@ -39,7 +40,7 @@ def render_home():
     """, unsafe_allow_html=True)
 
     # 轮播用自定义组件 (iframe)，点击通过 postMessage 传回，不触发页面重载
-    selected = st.html(f"""
+    selected = components.html(f"""
     <!DOCTYPE html>
     <html>
     <head>
