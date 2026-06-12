@@ -13,6 +13,29 @@ from data.seed_data import seed_all, FLAG_MAP
 from engine.predictor import Predictor
 
 
+def render_home():
+    """首页：轮播 + 赛事入口"""
+    st.title("🏆 2026 世界杯预测中心")
+    st.markdown('<p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 8px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>', unsafe_allow_html=True)
+
+    store = st.session_state.store
+    all_teams = [t for t in store.get_all_teams() if t.id != 0]
+    chips = []
+    for t in all_teams:
+        flag = FLAG_MAP.get(t.fifa_code, "")
+        chips.append(
+            f'<a href="/?team={t.fifa_code}" target="_self" class="team-chip">'
+            f'<span class="team-chip-flag">{flag}</span>'
+            f'<span class="team-chip-name">{t.name_cn}</span>'
+            f'</a>'
+        )
+    track_html = "".join(chips) + "".join(chips)
+    st.markdown(
+        f'<div class="team-carousel-wrapper"><div class="team-carousel-track">{track_html}</div></div>',
+        unsafe_allow_html=True
+    )
+
+
 def main():
     st.set_page_config(
         page_title="2026 世界杯预测",
@@ -65,26 +88,21 @@ def main():
         st.divider()
         st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
 
-    st.title("🏆 2026 世界杯预测中心")
-    st.markdown('<p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 8px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>', unsafe_allow_html=True)
+    # 检查是否有球队详情请求
+    params = st.query_params
+    team_code = params.get("team", None)
 
-    # === 球队轮播 ===
-    store = st.session_state.store
-    all_teams = [t for t in store.get_all_teams() if t.id != 0]
-    chips = []
-    for t in all_teams:
-        flag = FLAG_MAP.get(t.fifa_code, "")
-        chips.append(
-            f'<a href="/球队详情?team={t.fifa_code}" target="_self" class="team-chip">'
-            f'<span class="team-chip-flag">{flag}</span>'
-            f'<span class="team-chip-name">{t.name_cn}</span>'
-            f'</a>'
-        )
-    track_html = "".join(chips) + "".join(chips)
-    st.markdown(
-        f'<div class="team-carousel-wrapper"><div class="team-carousel-track">{track_html}</div></div>',
-        unsafe_allow_html=True
-    )
+    if team_code:
+        from web.detail_view import show_team_detail
+        store = st.session_state.store
+        team = store.get_team_by_code(team_code.upper())
+        if team:
+            show_team_detail(team)
+        else:
+            st.warning(f"未找到球队: {team_code}")
+            render_home()
+    else:
+        render_home()
 
 
 if __name__ == "__main__":
