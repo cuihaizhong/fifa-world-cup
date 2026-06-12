@@ -8,8 +8,11 @@ import numpy as np
 import plotly.graph_objects as go
 import pandas as pd
 from collections import Counter
+from web.theme import inject_theme
 from web.components import footer
 from engine.elo import EloEngine
+
+inject_theme()
 from config import DB_PATH
 from data.store import Store
 from data.seed_data import seed_all

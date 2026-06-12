@@ -5,9 +5,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 import streamlit as st
 from datetime import date, timedelta, datetime
+from web.theme import inject_theme
 from web.components import match_card, stat_cards, footer
 from engine.predictor import Predictor
 from config import DB_PATH
+
+inject_theme()
 from data.store import Store
 from data.seed_data import seed_all
 

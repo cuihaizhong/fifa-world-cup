@@ -6,8 +6,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
+from web.theme import inject_theme
 from web.components import team_selector, footer
 from config import DB_PATH
+
+inject_theme()
 from data.store import Store
 from data.seed_data import seed_all
 from engine.predictor import Predictor
