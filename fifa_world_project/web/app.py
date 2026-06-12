@@ -4,7 +4,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
-import streamlit.components.v1 as components
 from datetime import date, datetime
 
 from config import DB_PATH
@@ -40,7 +39,7 @@ def render_home():
     """, unsafe_allow_html=True)
 
     # 轮播用自定义组件 (iframe)，点击通过 postMessage 传回，不触发页面重载
-    selected = components.html(f"""
+    selected = st.html(f"""
     <!DOCTYPE html>
     <html>
     <head>
@@ -174,7 +173,8 @@ def main():
     if team_code:
         from web.detail_view import show_team_detail
         store = st.session_state.store
-        team = store.get_team_by_code(team_code.upper())
+        code = team_code.upper()
+        team = store.get_team_by_code(code)
         if team:
             show_team_detail(team)
         else:
