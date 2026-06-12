@@ -7,12 +7,13 @@ import streamlit as st
 from datetime import date, timedelta, datetime
 from web.components import match_card, stat_cards, footer
 from engine.predictor import Predictor
+from config import DB_PATH
 from data.store import Store
 from data.seed_data import seed_all
 
 # Initialize shared session state
 if "store" not in st.session_state:
-    store = Store()
+    store = Store(DB_PATH)
     store.init_db()
     if store.is_empty():
         seed_all(store)

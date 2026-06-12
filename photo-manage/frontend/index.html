@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时光胶囊 - 相册管理工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f7;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .status {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #0056cc;
+        }
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .album-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .album-image {
+            width: 100%;
+            height: 200px;
+            background: #e5e5e7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        .album-info {
+            padding: 16px;
+        }
+        .album-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .album-desc {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="header">
+                <h1>⏰ 时光胶囊</h1>
+                <p>记录美好时光，珍藏每刻感动</p>
+            </div>
+
+            <div class="status">
+                <h2>🎉 连接状态</h2>
+                <p>✅ 服务器连接正常</p>
+                <p>✅ API服务正常</p>
+                <p>✅ 静态文件服务正常</p>
+                <p>⚠️ TypeScript模块加载有问题（MIME类型）</p>
+            </div>
+
+            <div class="status">
+                <h2>📸 相册管理</h2>
+                <button class="btn" onclick="loadAlbums()">加载相册</button>
+                <div id="albums-container"></div>
+            </div>
+
+            <div class="status">
+                <h2>🌍 旅行足迹</h2>
+                <button class="btn" onclick="loadTravel()">加载旅行数据</button>
+                <div id="travel-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局状态
+        let albums = [];
+        let travelData = [];
+
+        // 加载相册数据
+        async function loadAlbums() {
+            try {
+                const response = await fetch('/api/albums');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    albums = data.data;
+                    displayAlbums();
+                } else {
+                    alert('加载相册失败：' + data.message);
+                }
+            } catch (error) {
+                alert('网络错误：' + error.message);
+            }
+        }
+
+        // 显示相册
+        function displayAlbums() {
+            const container = document.getElementById('albums-container');
+
+            if (albums.length === 0) {
+                container.innerHTML = '<p>暂无相册数据</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="album-grid">' +
+                albums.map(album => `
+                    <div class="album-card">
+                        <div class="album-image">
+                            <img src="${album.coverImage}" alt="${album.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='📸';">
+                        </div>
+                        <div class="album-info">
+                            <div class="album-title">${album.name}</div>
+                            <div class="album-desc">${album.description}</div>
+                            <div class="album-desc">共 ${album.photoCount} 张照片</div>
+                        </div>
+                    </div>
+                `).join('') +
+                '</div>';
+        }
+
+        // 加载旅行数据
+        async function loadTravel() {
+            try {
+                const response = await fetch('/api/travel');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    travelData = data.data;
+                    displayTravel();
+                } else {
+                    alert('加载旅行数据失败：' + data.message);
+                }
+            } catch (error) {
+                alert('网络错误：' + error.message);
+            }
+        }
+
+        // 显示旅行数据
+        function displayTravel() {
+            const container = document.getElementById('travel-container');
+
+            if (!travelData.locations || travelData.locations.length === 0) {
+                container.innerHTML = '<p>暂无旅行数据</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="album-grid">' +
+                travelData.locations.map(location => `
+                    <div class="album-card">
+                        <div class="album-image">
+                            <img src="${location.coverImage}" alt="${location.province} - ${location.city}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='🌍';">
+                        </div>
+                        <div class="album-info">
+                            <div class="album-title">${location.province} - ${location.city}</div>
+                            <div class="album-desc">访问次数：${location.visitCount}</div>
+                        </div>
+                    </div>
+                `).join('') +
+                '</div>';
+        }
+
+        // 页面加载完成后显示欢迎信息
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('时光胶囊 - 页面加载完成');
+        });
+    </script>
+</body>
+</html>

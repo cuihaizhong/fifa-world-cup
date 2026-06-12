@@ -7,13 +7,14 @@ import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from web.components import team_selector, footer
+from config import DB_PATH
 from data.store import Store
 from data.seed_data import seed_all
 from engine.predictor import Predictor
 
 # Initialize shared session state
 if "store" not in st.session_state:
-    store = Store()
+    store = Store(DB_PATH)
     store.init_db()
     if store.is_empty():
         seed_all(store)

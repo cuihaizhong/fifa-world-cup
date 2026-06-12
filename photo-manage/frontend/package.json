@@ -1,0 +1,50 @@
+{
+  "name": "time-capsule",
+  "version": "1.0.0",
+  "description": "时光胶囊 - 智能相册管理工具",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vite.json"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2",
+    "pinia": "^2.1.4",
+    "axios": "^1.4.0",
+    "element-plus": "^2.3.8",
+    "@element-plus/icons-vue": "^2.1.0",
+    "dayjs": "^1.11.9",
+    "cropperjs": "^1.5.13",
+    "sortablejs": "^1.15.0",
+    "qrcode": "^1.5.3",
+    "socket.io-client": "^4.7.2",
+    "exif-js": "^2.3.0",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
+    "masonry-layout": "^4.2.2",
+    "photoswipe": "^5.3.8",
+
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.19",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9",
+    "vue-tsc": "^1.6.5",
+
+    "eslint": "^8.45.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "sass": "^1.63.6",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
