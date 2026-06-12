@@ -1,93 +1,91 @@
 #!/usr/bin/env python3
-"""百度体育球队数据爬虫 — 批量爬取所有 48 支球队的赛程/阵容/资料/历史成绩
-
-用法:
-    python3 data/scrape_teams.py              # 爬取全部 48 队
-    python3 data/scrape_teams.py FRA KOR BRA  # 只爬指定球队
-    python3 data/scrape_teams.py --top 10     # 只爬 Elo 前 10 名
-
-输出: data/baidu_teams.json (增量更新)
+"""百度体育全量爬虫 — 使用 urllib 直接抓取，批量爬取 48 队的所有数据。
+运行: python3 data/scrape_teams.py
 """
-
-import json
-import os
-import sys
-import time
-import re
-import argparse
-from typing import Optional
+import json, os, re, time, urllib.request, urllib.parse, sys
+from html import unescape
 
 CACHE_PATH = os.path.join(os.path.dirname(__file__), "baidu_teams.json")
-BAIDU_TEAM_URL = "https://tiyu.baidu.com/al/team?id={team_id}&tab={tab}"
+BAIDU_TEAM = "https://tiyu.baidu.com/al/team?id={tid}&tab={tab}"
 
-TABS = ["赛程", "阵容", "资料", "历史成绩"]
+TABS = {
+    "schedule": "赛程",
+    "squad": "阵容",
+    "info": "资料",
+    "history": "历史成绩",
+}
 
-
-def load_cache() -> dict:
-    if os.path.exists(CACHE_PATH):
-        with open(CACHE_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-
-def save_cache(data: dict):
-    with open(CACHE_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"  ✅ 已保存到 {CACHE_PATH}")
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+}
 
 
-def extract_tab_text(page) -> str:
-    """从 Playwright page 中提取当前标签页的纯文本"""
-    try:
-        page.wait_for_timeout(1500)
-        text = page.evaluate("document.body.innerText")
-        return text
-    except Exception:
-        return ""
+def fetch(url: str) -> str:
+    """获取页面 HTML 文本"""
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        html = resp.read().decode("utf-8", errors="replace")
+    # 去掉 HTML 标签，提取纯文本
+    text = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL)
+    text = re.sub(r"<style[^>]*>.*?</style>", "", text, flags=re.DOTALL)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = unescape(text)
+    text = re.sub(r"\s{3,}", "\n", text)
+    return text.strip()
 
 
 def parse_squad(text: str) -> dict:
-    """解析阵容页文本, 提取教练组和按位置分组的大名单"""
+    """解析阵容页"""
     result = {"coaches": [], "players": {}}
 
     # 教练组
-    coach_start = text.find("教练组")
-    positions = ["前锋", "中场", "后卫", "门将"]
-    first_pos = min((text.find(p) for p in positions if text.find(p) > 0), default=len(text))
-    if coach_start > 0 and first_pos > coach_start:
-        coach_text = text[coach_start:first_pos]
-        lines = [l.strip() for l in coach_text.split("\n") if l.strip()]
-        for i in range(1, len(lines), 3):
+    coach_m = re.search(r"教练组\s*\n(.*?)(?=前锋|中场|后卫|门将|\Z)", text, re.DOTALL)
+    if coach_m:
+        lines = [l.strip() for l in coach_m.group(1).split("\n") if l.strip()]
+        for i in range(0, len(lines) - 1, 2):
             if i + 1 < len(lines):
-                result["coaches"].append({
-                    "name": lines[i],
-                    "info": lines[i + 1],
-                })
+                result["coaches"].append({"name": lines[i], "info": lines[i+1]})
 
-    # 球员 (按位置)
-    for idx, pos in enumerate(positions):
-        start = text.find(pos)
-        end = text.find(positions[idx + 1]) if idx + 1 < len(positions) else len(text)
-        if start < 0:
+    # 球员 (四个位置)
+    for pos in ["前锋", "中场", "后卫", "门将"]:
+        next_pos = {"前锋": "中场", "中场": "后卫", "后卫": "门将", "门将": None}[pos]
+        pattern = f"{pos}\\s*\\n(.*?)"
+        if next_pos:
+            pattern += f"(?={next_pos})"
+        m = re.search(pattern, text, re.DOTALL)
+        if not m:
             continue
-        section = text[start:end]
+        section = m.group(1)
+        # 跳过表头 (出场/进球/助攻/身价)
         lines = [l.strip() for l in section.split("\n") if l.strip()]
+        # 找到数据起始行 (数字开头的行)
         players = []
-        # 跳过位置标题行和表头 (出场/进球/助攻/身价)
-        data_start = 0
-        for j, line in enumerate(lines):
-            if "身价" in line:
-                data_start = j + 1
-                break
-        for j in range(data_start, len(lines), 5):
-            if j + 4 < len(lines):
-                players.append({
-                    "number": lines[j],
-                    "name": lines[j + 1],
-                    "club": lines[j + 2],
-                    "apps": lines[j + 3],
-                    "goals": lines[j + 4].split("/")[0] if "/" in lines[j + 4] else "",
-                })
+        i = 0
+        while i < len(lines):
+            if re.match(r"^\d{1,2}$", lines[i]):
+                if i + 1 < len(lines):
+                    name = lines[i+1]
+                    # 格式: "姓名 年龄/俱乐部"
+                    parts = name.rsplit("/", 1)
+                    player_name = parts[0] if len(parts) > 1 else name
+                    club = parts[1] if len(parts) > 1 else ""
+                    # 下一行是 stats: "出场 进球 助攻"
+                    apps = lines[i+2] if i+2 < len(lines) else ""
+                    goals = lines[i+3] if i+3 < len(lines) else ""
+                    players.append({
+                        "number": lines[i],
+                        "name": player_name.strip(),
+                        "club": club.strip(),
+                        "apps": apps.strip(),
+                        "goals": goals.strip(),
+                    })
+                    i += 4
+                else:
+                    i += 1
+            else:
+                i += 1
         if players:
             result["players"][pos] = players
 
@@ -95,133 +93,120 @@ def parse_squad(text: str) -> dict:
 
 
 def parse_schedule(text: str) -> list:
-    """解析赛程页文本, 提取比赛列表"""
+    """解析赛程 — 提取我们的数据库赛程作为 fallback"""
     matches = []
-    lines = text.split("\n")
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        # 匹配日期行: "06-12/今天" 或 "06-19/周五"
-        if re.match(r"\d{2}-\d{2}/", line):
-            matches.append({"date_label": line})
-        # 匹配时间+赛事行
-        elif re.match(r"\d{2}:\d{2}", line):
-            matches.append({"time": line})
-        # 匹配比分
-        elif re.match(r".+\s+\d+\s*-\s*\d+\s+.+", line) or "vs" in line.lower():
-            matches.append({"fixture": line})
+    # 匹配标准赛程行: 日期 时间 主队 vs 客队 赛事
+    for m in re.finditer(
+        r"(\d{2}-\d{2})\S*\s+(\d{2}:\d{2})\s+(.+?)\s+(vs|-)\s+(.+?)\s+(.+)",
+        text
+    ):
+        matches.append({
+            "date": m.group(1),
+            "time": m.group(2),
+            "home": m.group(3).strip(),
+            "away": m.group(5).strip(),
+            "stage": m.group(6).strip(),
+        })
     return matches
 
 
 def parse_info(text: str) -> dict:
-    """解析资料页文本"""
+    """解析资料/排名"""
     info = {}
-    for key in ["世界排名", "欧洲排名", "亚洲排名", "非洲排名", "南美排名", "中北美排名"]:
-        m = re.search(f"{key}(\\d+)", text)
+    rank_map = [
+        ("世界排名", r"世界排名\s*(\d+)"),
+        ("欧洲排名", r"欧洲排名\s*(\d+)"),
+        ("亚洲排名", r"亚洲排名\s*(\d+)"),
+        ("非洲排名", r"非洲排名\s*(\d+)"),
+        ("南美排名", r"南美排名\s*(\d+)"),
+        ("中北美排名", r"中北美排名\s*(\d+)"),
+    ]
+    for key, pattern in rank_map:
+        m = re.search(pattern, text)
         if m:
             info[key] = int(m.group(1))
     return info
 
 
 def parse_history(text: str) -> dict:
-    """解析历史成绩页文本"""
-    return {"raw": text[:1000]}
+    """解析历史成绩"""
+    # 提取奖杯/荣誉
+    honors = []
+    for m in re.finditer(r"(世界杯|欧洲杯|美洲杯|亚洲杯|非洲杯|联合会杯|奥运会|金杯赛)[^\n]*冠军[^\n]*", text):
+        honors.append(m.group().strip())
+    return {"honors": honors}
 
 
-def scrape_team(page, team_id: str, code: str) -> dict:
+def scrape_team(code: str, team_id: str) -> dict:
     """爬取一支球队的全部数据"""
-    data = {"team_id": team_id}
-
-    for tab in TABS:
-        tab_encoded = {
-            "赛程": "%E8%B5%9B%E7%A8%8B",
-            "阵容": "%E9%98%B5%E5%AE%B9",
-            "资料": "%E8%B5%84%E6%96%99",
-            "历史成绩": "%E5%8E%86%E5%8F%B2%E6%88%90%E7%BB%A9",
-        }[tab]
-        url = BAIDU_TEAM_URL.format(team_id=team_id, tab=tab_encoded)
+    result = {}
+    for key, tab_name in TABS.items():
+        encoded = urllib.parse.quote(tab_name)
+        url = BAIDU_TEAM.format(tid=team_id, tab=encoded)
         try:
-            page.goto(url, timeout=15000)
-            text = extract_tab_text(page)
-
-            if tab == "赛程":
-                data["schedule"] = parse_schedule(text)
-            elif tab == "阵容":
-                data["squad"] = parse_squad(text)
-            elif tab == "资料":
-                data["info"] = parse_info(text)
-            elif tab == "历史成绩":
-                data["history"] = parse_history(text)
-
-            print(f"    ✅ {tab} ({len(text)} chars)")
+            text = fetch(url)
+            time.sleep(0.3)  # 礼貌延迟
         except Exception as e:
-            print(f"    ⚠️ {tab} 失败: {e}")
-            data[{"赛程": "schedule", "阵容": "squad", "资料": "info", "历史成绩": "history"}[tab]] = None
+            print(f"    ⚠️ {tab_name} 请求失败: {e}")
+            continue
 
-    return data
+        if key == "schedule":
+            result["matches"] = parse_schedule(text)
+        elif key == "squad":
+            result["squad"] = parse_squad(text)
+        elif key == "info":
+            result["info"] = parse_info(text)
+        elif key == "history":
+            result["history"] = parse_history(text)
+
+        count = len(result.get({"schedule":"matches","squad":"squad","info":"info","history":"history"}[key], []))
+        if isinstance(result.get(key if key=="squad" else ""), dict):
+            count = sum(len(v) for v in result["squad"]["players"].values()) + len(result["squad"]["coaches"])
+        print(f"    ✅ {tab_name} ({count} items)")
+
+    return result
 
 
 def main():
-    parser = argparse.ArgumentParser(description="爬取百度体育球队数据")
-    parser.add_argument("codes", nargs="*", help="球队 FIFA 代码 (如 FRA BRA)")
-    parser.add_argument("--top", type=int, help="只爬 Elo 前 N 名")
-    args = parser.parse_args()
-
     cache = load_cache()
+    # 筛选需要爬取的球队 (有 team_id 但没有 squad 的优先)
+    targets = [(c, d["team_id"]) for c, d in cache.items() if d.get("team_id")]
 
-    # 确定要爬的球队
-    if args.codes:
-        targets = [(c.upper(), cache.get(c.upper(), {}).get("team_id")) for c in args.codes]
-    else:
-        targets = [(c, d.get("team_id")) for c, d in cache.items() if d.get("team_id")]
+    print(f"🎯 开始爬取 {len(targets)} 支球队...\n")
+    start = time.time()
 
-    if args.top:
-        # 从 seed_data 导入排序
-        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        from data.seed_data import create_teams
-        from engine.elo import EloEngine
-        elo = EloEngine()
-        teams = create_teams()
-        teams.sort(key=lambda t: elo.initial_elo(t.fifa_rank), reverse=True)
-        top_codes = [t.fifa_code for t in teams[:args.top]]
-        targets = [(c, cache.get(c, {}).get("team_id")) for c in top_codes if cache.get(c, {}).get("team_id")]
+    for i, (code, tid) in enumerate(targets):
+        # 跳过已经有 squad 数据的
+        existing = cache[code]
+        if "squad" in existing and existing["squad"].get("players"):
+            print(f"[{i+1}/{len(targets)}] {code} — 已有数据，跳过")
+            continue
 
-    print(f"\n{'='*60}")
-    print(f"🎯 目标: {len(targets)} 支球队")
-    print(f"{'='*60}\n")
-
-    # Playwright 延迟导入
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        print("❌ 请先安装 Playwright: pip install playwright && playwright install chromium")
-        return
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-
-        for i, (code, team_id) in enumerate(targets):
-            if not team_id:
-                print(f"  [{i+1}/{len(targets)}] {code} — 无 team_id, 跳过")
-                continue
-
-            print(f"  [{i+1}/{len(targets)}] {code} (id={team_id[:8]}...)")
-            try:
-                team_data = scrape_team(page, team_id, code)
-                cache[code] = {**cache.get(code, {}), **team_data}
+        print(f"[{i+1}/{len(targets)}] {code} ({existing.get('name_cn','')})")
+        try:
+            team_data = scrape_team(code, tid)
+            cache[code] = {**existing, **team_data}
+            # 每 5 队保存一次
+            if (i + 1) % 5 == 0:
                 save_cache(cache)
-            except Exception as e:
-                print(f"    ❌ 失败: {e}")
+        except Exception as e:
+            print(f"  ❌ 失败: {e}")
 
-            time.sleep(0.5)  # 礼貌延迟
+    save_cache(cache)
+    elapsed = time.time() - start
+    print(f"\n✅ 完成! 耗时 {elapsed:.0f}s, 数据保存到 {CACHE_PATH}")
 
-        browser.close()
 
-    print(f"\n{'='*60}")
-    print(f"✅ 完成! 数据已保存到 {CACHE_PATH}")
-    print(f"{'='*60}")
+def load_cache():
+    if os.path.exists(CACHE_PATH):
+        with open(CACHE_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+
+def save_cache(data):
+    with open(CACHE_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
