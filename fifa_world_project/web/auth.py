@@ -35,40 +35,62 @@ def init_auth():
 
 
 def show_login():
-    """Display centered login form with background image, no sidebar"""
+    """Display centered login form with full-screen background image, no sidebar"""
     bg_b64 = _get_bg_base64()
 
-    # 隐藏侧边栏 + 设置背景图片
-    bg_css = f"""
+    st.markdown(f"""
     <style>
+    /* 隐藏侧边栏 */
     [data-testid="stSidebar"] {{ display: none !important; }}
     [data-testid="stSidebarCollapsedControl"] {{ display: none !important; }}
-    .stApp {{
-        background: linear-gradient(rgba(10, 14, 26, 0.82), rgba(10, 14, 26, 0.82)), url(data:image/jpeg;base64,{bg_b64}) !important;
-        background-size: cover !important;
-        background-position: center !important;
-        background-attachment: fixed !important;
+
+    /* 背景图 — 固定全屏 */
+    .login-bg-img {{
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0.35;
+        pointer-events: none;
     }}
-    .stMainBlockContainer {{
-        background: transparent !important;
+
+    /* 内容在最上层 */
+    .login-content {{
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
     }}
+
+    /* 重置 Streamlit 容器背景 */
+    .stApp {{ background: #0A0E1A !important; }}
+    .stMainBlockContainer {{ background: transparent !important; }}
+    .block-container {{ max-width: 100% !important; }}
     </style>
-    """
-    st.markdown(bg_css, unsafe_allow_html=True)
 
-    # 留白
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    <!-- 全屏背景图 -->
+    <img class="login-bg-img" src="data:image/jpeg;base64,{bg_b64}" />
 
-    col1, col2, col3 = st.columns([1, 1.5, 1])
+    <!-- 登录内容 -->
+    <div class="login-content">
+    """, unsafe_allow_html=True)
+
+    # 登录卡片
+    col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
-        # 登录卡片
         st.markdown("""
         <div style="
-            background: rgba(19, 24, 50, 0.92);
+            background: rgba(19, 24, 50, 0.94);
             border: 1px solid rgba(42, 48, 80, 0.6);
             border-radius: 16px;
             padding: 40px 32px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         ">
         """, unsafe_allow_html=True)
 
@@ -96,6 +118,8 @@ def show_login():
                 st.error("❌ 用户名或密码错误")
 
         st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def show_logout_button():
