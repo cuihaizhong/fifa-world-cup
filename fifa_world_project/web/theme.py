@@ -43,29 +43,24 @@ def inject_theme():
         font-size: 0.95rem !important;
     }}
 
-    /* === 桌面端(≥769px)：侧边栏固定300px常开，不可收起 === */
-    @media (min-width: 769px) {{
-        section[data-testid="stSidebar"] {{
-            width: 300px !important;
-            min-width: 300px !important;
-            max-width: 300px !important;
-            transform: none !important;
-            transition: none !important;
-        }}
-        [data-testid="stSidebarCollapseButton"] {{
-            display: none !important;
-        }}
-        [data-testid="collapsedControl"] {{
-            display: none !important;
-        }}
+    /* 收起按钮放到右上角可见位置 */
+    [data-testid="stSidebarCollapseButton"] {{
+        position: absolute !important;
+        right: 8px !important;
+        top: 8px !important;
+        left: auto !important;
+        visibility: visible !important;
+        z-index: 10 !important;
+    }}
+    /* 展开按钮可见 */
+    [data-testid="collapsedControl"] {{
+        display: flex !important;
+        visibility: visible !important;
     }}
 
     /* 登录页：隐藏侧边栏 */
     .login-page section[data-testid="stSidebar"] {{
         display: none !important;
-        width: 0 !important;
-        min-width: 0 !important;
-        max-width: 0 !important;
     }}
 
     /* === 主区域 === */
@@ -284,13 +279,9 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏手机端缩小不可收起 */
+        /* 侧边栏手机端略窄 */
         section[data-testid="stSidebar"] {{
-            width: 180px !important;
-            min-width: 180px !important;
-            max-width: 180px !important;
-            transform: none !important;
-            transition: none !important;
+            max-width: 260px;
         }}
 
         /* ---- 内容区 ---- */
@@ -468,13 +459,9 @@ def inject_theme():
             font-size: 2.5rem !important;
         }}
 
-        /* ---- 侧边栏：最小宽度 ---- */
+        /* ---- 侧边栏 ---- */
         section[data-testid="stSidebar"] {{
-            width: 150px !important;
-            min-width: 150px !important;
-            max-width: 150px !important;
-            transform: none !important;
-            transition: none !important;
+            max-width: 220px;
         }}
 
         /* ---- 内容区 ---- */
