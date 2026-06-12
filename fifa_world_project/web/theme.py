@@ -17,16 +17,14 @@ def inject_theme():
         background-color: {THEME['bg_dark']};
     }}
 
-    /* === 隐藏默认工具栏 (保留 header 确保侧边栏展开按钮可用) === */
-    [data-testid="stHeader"] {{
-        background: {THEME['bg_dark']} !important;
-    }}
+    /* === 隐藏默认工具栏 === */
+    [data-testid="stHeader"] {{ display: none !important; }}
     [data-testid="stToolbar"] {{ display: none !important; }}
     .stDeployButton {{ display: none !important; }}
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏 === */
+    /* === 侧边栏：始终展开，隐藏收放按钮 === */
     [data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
@@ -34,22 +32,9 @@ def inject_theme():
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
     }}
-    /* 侧边栏收放按钮 — 确保可见可点击 */
-    [data-testid="collapsedControl"] {{
-        color: {THEME['text_primary']} !important;
-        background: {THEME['card_bg']} !important;
-        border: 1px solid {THEME['border']} !important;
-        border-radius: 0 8px 8px 0 !important;
-        padding: 8px 6px !important;
-        min-height: 40px !important;
-    }}
-    [data-testid="collapsedControl"] svg {{
-        fill: {THEME['text_primary']} !important;
-        width: 20px !important; height: 20px !important;
-    }}
-    [data-testid="collapsedControl"]:hover {{
-        background: {THEME['primary']} !important;
-    }}
+    /* 隐藏侧边栏收放按钮 (小箭头) */
+    [data-testid="stSidebarCollapseButton"] {{ display: none !important; }}
+    [data-testid="collapsedControl"] {{ display: none !important; }}
     /* 侧边栏导航字体加大 */
     [data-testid="stSidebar"] a {{
         font-size: 1.05rem !important;
