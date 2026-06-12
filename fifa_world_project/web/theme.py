@@ -449,5 +449,42 @@ def inject_theme():
         }}
     }}
     </style>
+    <script>
+    (function() {
+        // 手机端自动收起侧边栏，桌面端保持展开
+        function handleSidebar() {{
+            var isMobile = window.innerWidth < 768;
+            var sidebar = parent.document.querySelector('[data-testid="stSidebar"]');
+            if (!sidebar) {{
+                // 在 Streamlit Cloud 嵌套 iframe 中，需要在顶层查找
+                try {{
+                    var topDoc = window.top.document;
+                    sidebar = topDoc.querySelector('[data-testid="stSidebar"]');
+                }} catch(e) {{
+                    // 跨域限制，尝试在当前文档找
+                    sidebar = document.querySelector('[data-testid="stSidebar"]');
+                }}
+            }}
+            if (!sidebar) return;
+            // 手机端收起，桌面端展开
+            if (isMobile) {{
+                sidebar.setAttribute('aria-expanded', 'false');
+            }} else {{
+                sidebar.setAttribute('aria-expanded', 'true');
+            }}
+        }}
+        // 初始化
+        if (document.readyState === 'complete') {{
+            setTimeout(handleSidebar, 500);
+        }} else {{
+            window.addEventListener('load', function() {{ setTimeout(handleSidebar, 800); }});
+        }}
+        // 监听窗口大小变化
+        window.addEventListener('resize', handleSidebar);
+        // Streamlit 页面切换后重新处理
+        var obs = new MutationObserver(function() {{ setTimeout(handleSidebar, 300); }});
+        obs.observe(document.body || document.documentElement, {{ childList: true, subtree: true }});
+    }})();
+    </script>
     """
     st.markdown(css, unsafe_allow_html=True)
