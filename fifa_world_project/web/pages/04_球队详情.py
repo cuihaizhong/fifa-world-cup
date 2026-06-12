@@ -135,8 +135,8 @@ def show():
 
     st.divider()
 
-    # === TABBED BAIDU DATA ===
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📋 赛程", "👥 阵容", "📊 资料", "🏅 历史成绩", "📈 Elo分析"])
+    # === 详情标签页 ===
+    tab1, tab2, tab3, tab4 = st.tabs(["📋 赛程", "👥 阵容", "📊 资料", "🏅 历史成绩"])
 
     # --- TAB 1: 赛程 (本系统官方赛程) ---
     with tab1:
@@ -230,45 +230,52 @@ def show():
     with tab4:
         history_data = baidu_data.get("history", {})
         history_raw = history_data.get("raw", "") if isinstance(history_data, dict) else ""
-        if history_raw:
-            st.text(history_raw[:2000])
+        honors = history_data.get("honors", [])
+        if honors:
+            for h in honors:
+                st.markdown(f'<div style="background:{THEME["card_bg"]};border-radius:8px;padding:8px 14px;margin:4px 0;">🏆 {h}</div>', unsafe_allow_html=True)
+        elif history_raw:
+            st.text(history_raw[:1000])
         else:
-            st.info("暂无历史成绩数据")
+            st.info("暂无历史荣誉数据")
 
-    # --- TAB 5: Elo分析 ---
-    with tab5:
-        elo_history = store.get_elo_history(team.id)
-        if elo_history:
-            df = pd.DataFrame(elo_history)
-            df["updated_at"] = pd.to_datetime(df["updated_at"])
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(x=df["updated_at"], y=df["new_elo"],
-                mode="lines+markers", line=dict(color=THEME["primary"], width=2),
-                marker=dict(size=6, color=THEME["primary"]), name="Elo"))
-            fig.update_layout(template="plotly_dark", paper_bgcolor=THEME["bg_dark"],
-                plot_bgcolor=THEME["card_bg"], font=dict(color=THEME["text_secondary"]),
-                xaxis=dict(gridcolor=THEME["border"], title=""),
-                yaxis=dict(gridcolor=THEME["border"], title="Elo 评分"),
-                margin=dict(l=0, r=0, t=10, b=0), height=300, hovermode="x")
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("暂无 Elo 历史数据 (比赛尚未开始)")
+    st.divider()
 
-        st.subheader(f"🏟️ 组 {team.group} 实力对比")
-        group_teams = store.get_teams_by_group(team.group)
-        if group_teams:
-            sorted_teams = sorted(group_teams, key=lambda t: t.elo_rating, reverse=True)
-            colors = [THEME["primary"] if t.name_cn == team.name_cn else THEME["text_secondary"] for t in sorted_teams]
-            fig2 = go.Figure()
-            fig2.add_trace(go.Bar(x=[t.name_cn for t in sorted_teams], y=[t.elo_rating for t in sorted_teams],
-                marker_color=colors, text=[f"{t.elo_rating:.0f}" for t in sorted_teams],
-                textposition="outside", textfont=dict(color=THEME["text_primary"])))
-            fig2.update_layout(template="plotly_dark", paper_bgcolor=THEME["bg_dark"],
-                plot_bgcolor=THEME["card_bg"], font=dict(color=THEME["text_secondary"]),
-                xaxis=dict(gridcolor=THEME["border"], title=""),
-                yaxis=dict(gridcolor=THEME["border"], title="Elo 评分"),
-                margin=dict(l=0, r=0, t=10, b=0), height=300, showlegend=False)
-            st.plotly_chart(fig2, use_container_width=True)
+    # === Elo 分析 (在标签下方) ===
+    st.subheader("📈 Elo 趋势分析")
+
+    elo_history = store.get_elo_history(team.id)
+    if elo_history:
+        df = pd.DataFrame(elo_history)
+        df["updated_at"] = pd.to_datetime(df["updated_at"])
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=df["updated_at"], y=df["new_elo"],
+            mode="lines+markers", line=dict(color=THEME["primary"], width=2),
+            marker=dict(size=6, color=THEME["primary"]), name="Elo"))
+        fig.update_layout(template="plotly_dark", paper_bgcolor=THEME["bg_dark"],
+            plot_bgcolor=THEME["card_bg"], font=dict(color=THEME["text_secondary"]),
+            xaxis=dict(gridcolor=THEME["border"], title=""),
+            yaxis=dict(gridcolor=THEME["border"], title="Elo 评分"),
+            margin=dict(l=0, r=0, t=10, b=0), height=300, hovermode="x")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("暂无 Elo 历史数据 (比赛尚未开始)")
+
+    st.subheader(f"🏟️ 组 {team.group} 实力对比")
+    group_teams = store.get_teams_by_group(team.group)
+    if group_teams:
+        sorted_teams = sorted(group_teams, key=lambda t: t.elo_rating, reverse=True)
+        colors = [THEME["primary"] if t.name_cn == team.name_cn else THEME["text_secondary"] for t in sorted_teams]
+        fig2 = go.Figure()
+        fig2.add_trace(go.Bar(x=[t.name_cn for t in sorted_teams], y=[t.elo_rating for t in sorted_teams],
+            marker_color=colors, text=[f"{t.elo_rating:.0f}" for t in sorted_teams],
+            textposition="outside", textfont=dict(color=THEME["text_primary"])))
+        fig2.update_layout(template="plotly_dark", paper_bgcolor=THEME["bg_dark"],
+            plot_bgcolor=THEME["card_bg"], font=dict(color=THEME["text_secondary"]),
+            xaxis=dict(gridcolor=THEME["border"], title=""),
+            yaxis=dict(gridcolor=THEME["border"], title="Elo 评分"),
+            margin=dict(l=0, r=0, t=10, b=0), height=300, showlegend=False)
+        st.plotly_chart(fig2, use_container_width=True)
 
     footer()
 
