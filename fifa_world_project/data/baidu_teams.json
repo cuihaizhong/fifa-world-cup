@@ -1,0 +1,14 @@
+{
+  "KOR": {
+    "team_id": "e350aa265bc58bf922eb6ec5d3b705f3",
+    "name_cn": "韩国",
+    "name_en": "South Korea",
+    "world_rank": 25,
+    "asian_rank": 3,
+    "matches": [
+      {"date": "06-12", "time": "10:00", "stage": "世界杯小组赛A组第1轮", "home": "韩国", "away": "捷克", "home_score": "0", "away_score": "0", "status": "进行中"},
+      {"date": "06-19", "time": "09:00", "stage": "世界杯小组赛A组第2轮", "home": "墨西哥", "away": "韩国", "home_score": "-", "away_score": "-", "status": "未开赛"},
+      {"date": "06-25", "time": "09:00", "stage": "世界杯小组赛A组第3轮", "home": "南非", "away": "韩国", "home_score": "-", "away_score": "-", "status": "未开赛"}
+    ]
+  }
+}

@@ -11,9 +11,33 @@ def inject_theme():
         background-color: {THEME['bg_dark']};
         color: {THEME['text_primary']};
     }}
+    /* 隐藏 Streamlit 默认顶部工具栏(白色横条) */
+    header[data-testid="stHeader"] {{
+        display: none !important;
+    }}
+    [data-testid="stToolbar"] {{
+        display: none !important;
+    }}
+    .stDeployButton {{
+        display: none !important;
+    }}
+    /* 主区域背景全覆盖，消除白色空白 */
+    section[data-testid="stSidebar"] + div {{
+        background-color: {THEME['bg_dark']} !important;
+    }}
+    .main {{
+        background-color: {THEME['bg_dark']};
+    }}
+    .block-container {{
+        padding-top: 2rem;
+        background-color: {THEME['bg_dark']};
+    }}
     .stMainBlockContainer {{
         padding-top: 1rem;
     }}
+    /* 主菜单和页脚 */
+    #MainMenu {{ visibility: hidden !important; }}
+    footer {{ visibility: hidden !important; }}
     [data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
@@ -105,6 +129,57 @@ def inject_theme():
     .stButton > button:hover {{
         background: #3B82F6 !important;
         box-shadow: 0 4px 12px rgba(12, 74, 209, 0.3) !important;
+    }}
+    /* === 球队轮播 === */
+    .team-carousel-wrapper {{
+        overflow: hidden;
+        padding: 12px 0;
+        margin: 16px 0;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    }}
+    .team-carousel-track {{
+        display: flex;
+        gap: 10px;
+        width: max-content;
+        animation: carousel-scroll 80s linear infinite;
+    }}
+    .team-carousel-track:hover {{
+        animation-play-state: paused;
+    }}
+    @keyframes carousel-scroll {{
+        0% {{ transform: translateX(0); }}
+        100% {{ transform: translateX(-50%); }}
+    }}
+    .team-chip {{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 10px 14px;
+        background: {THEME['card_bg']};
+        border-radius: 12px;
+        border: 1px solid {THEME['border']};
+        text-decoration: none !important;
+        min-width: 72px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }}
+    .team-chip:hover {{
+        border-color: {THEME['primary']};
+        background: #1a2045;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(12, 74, 209, 0.2);
+    }}
+    .team-chip-flag {{
+        font-size: 2rem;
+        line-height: 1;
+    }}
+    .team-chip-name {{
+        color: {THEME['text_secondary']};
+        font-size: 0.72rem;
+        font-weight: 500;
+        white-space: nowrap;
     }}
     .footer {{
         text-align: center;
