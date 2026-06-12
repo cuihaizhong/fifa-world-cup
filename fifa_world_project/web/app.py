@@ -1,0 +1,69 @@
+"""2026 World Cup Prediction — Streamlit main entry"""
+import streamlit as st
+from datetime import date, datetime
+
+from config import DB_PATH
+from web.theme import inject_theme
+from data.store import Store
+from data.seed_data import seed_all
+from engine.predictor import Predictor
+
+
+def main():
+    st.set_page_config(
+        page_title="2026 世界杯预测",
+        page_icon="🏆",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+
+    inject_theme()
+
+    # Init database
+    if "store" not in st.session_state:
+        store = Store(DB_PATH)
+        store.init_db()
+        if store.is_empty():
+            seed_all(store)
+        st.session_state.store = store
+
+    # Init predictor
+    if "predictor" not in st.session_state:
+        st.session_state.predictor = Predictor(seed=42)
+
+    # Sidebar
+    with st.sidebar:
+        st.markdown("""
+        <div style="text-align: center; padding: 20px 0;">
+            <h1 style="font-size: 2.5rem; margin: 0;">🏆</h1>
+            <h2 style="font-size: 1.2rem; margin: 8px 0; color: #0C4AD1;">2026 世界杯预测</h2>
+            <p style="font-size: 0.75rem; color: #8892B0;">加拿大 · 墨西哥 · 美国</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.divider()
+        st.markdown('<div style="font-size: 0.85rem; color: #8892B0; margin-bottom: 8px;">📋 导航</div>', unsafe_allow_html=True)
+        st.divider()
+
+        store = st.session_state.store
+        team_count = len(store.get_all_teams())
+        match_count = len(store.get_all_matches())
+        upcoming = len(store.get_upcoming_matches())
+
+        st.markdown(f"""
+        <div style="font-size: 0.8rem; color: #8892B0; line-height: 1.8;">
+            📊 球队: <b style="color: #fff;">{team_count}</b> 支<br>
+            📅 比赛: <b style="color: #fff;">{match_count}</b> 场<br>
+            ⏳ 待赛: <b style="color: #0C4AD1;">{upcoming}</b> 场
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.divider()
+        st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
+
+    st.title("🏆 2026 世界杯预测中心")
+    st.markdown('<p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 24px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>', unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
+    main()
