@@ -4,7 +4,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
-import streamlit.components.v1 as components
 from datetime import date, datetime
 
 from config import DB_PATH
@@ -16,22 +15,11 @@ from engine.predictor import Predictor
 
 
 def render_home():
-    """首页：轮播 + 赛事入口，上下居中。轮播用 component 避免页面跳转"""
+    """首页：标题 + 球队下拉搜索"""
     store = st.session_state.store
     all_teams = [t for t in store.get_all_teams() if t.id != 0]
 
-    # 构建 chip HTML (两倍实现无缝循环)
-    chips = []
-    for t in all_teams:
-        flag = FLAG_MAP.get(t.fifa_code, "")
-        chips.append(
-            f'<div class="team-chip" onclick="selectTeam(\'{t.fifa_code}\')">'
-            f'<span class="team-chip-flag">{flag}</span>'
-            f'<span class="team-chip-name">{t.name_cn}</span>'
-            f'</div>'
-        )
-    track_html = "".join(chips) + "".join(chips)
-
+    # 标题居中
     st.markdown("""
     <div class="home-center">
         <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 4px;">🏆 2026 世界杯预测中心</h1>
@@ -39,63 +27,20 @@ def render_home():
     </div>
     """, unsafe_allow_html=True)
 
-    # 轮播用自定义组件 (iframe)，点击通过 postMessage 传回，不触发页面重载
-    selected = components.html(f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-    * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-    body {{ background: transparent; overflow: hidden; font-family: sans-serif; }}
-    .team-carousel-wrapper {{
-        overflow: hidden; padding: 12px 0; margin: 8px 0;
-        mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
-        -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
-    }}
-    .team-carousel-track {{
-        display: flex; gap: 20px; width: max-content;
-        animation: scroll 80s linear infinite;
-    }}
-    .team-carousel-track:hover {{ animation-play-state: paused; }}
-    @keyframes scroll {{
-        0% {{ transform: translateX(0); }}
-        100% {{ transform: translateX(-50%); }}
-    }}
-    .team-chip {{
-        display: flex; flex-direction: column; align-items: center; gap: 8px;
-        padding: 20px 28px; background: #131832;
-        border-radius: 16px; border: 2px solid #2A3050;
-        cursor: pointer; min-width: 144px; transition: all 0.2s ease;
-    }}
-    .team-chip:hover {{
-        border-color: #0C4AD1; background: #1a2045;
-        transform: translateY(-2px); box-shadow: 0 4px 12px rgba(12,74,209,0.2);
-    }}
-    .team-chip-flag {{ font-size: 4rem; line-height: 1; }}
-    .team-chip-name {{ color: #fff; font-size: 1.5rem; font-weight: 500; }}
-    </style>
-    </head>
-    <body>
-    <div class="team-carousel-wrapper">
-        <div class="team-carousel-track">{track_html}</div>
-    </div>
-    <script>
-    function selectTeam(code) {{
-        window.parent.postMessage({{
-            isStreamlitMessage: true,
-            type: 'streamlit:setComponentValue',
-            value: code
-        }}, '*');
-    }}
-    </script>
-    </body>
-    </html>
-    """, height=200)
+    # 球队搜索下拉
+    team_options = [f"{FLAG_MAP.get(t.fifa_code, '')}  {t.name_cn}  ({t.fifa_code})" for t in all_teams]
+    team_map = {f"{FLAG_MAP.get(t.fifa_code, '')}  {t.name_cn}  ({t.fifa_code})": t.fifa_code for t in all_teams}
 
-    # 处理球队选择 (用 _last 去重防止 component 旧值重复触发)
-    if selected and selected != st.session_state.get("_last_carousel_sel"):
-        st.session_state["_last_carousel_sel"] = selected
-        st.session_state["selected_team"] = selected
+    selected_label = st.selectbox(
+        "🔍 选择球队查看详情",
+        options=[""] + team_options,
+        format_func=lambda x: "— 点击搜索球队 —" if x == "" else x,
+        key="team_selector"
+    )
+
+    if selected_label:
+        code = team_map[selected_label]
+        st.session_state["selected_team"] = code
         st.rerun()
 
 
@@ -124,7 +69,7 @@ def main():
     # === Auth gate ===
     require_auth()
 
-    # Sidebar (所有侧边栏内容合并在一起)
+    # Sidebar
     with st.sidebar:
         # 用户信息 + 退出
         st.markdown(f"""
@@ -162,17 +107,17 @@ def main():
         st.divider()
         st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
 
-    # 检查球队详情请求 (仅用 session_state，query_params 有 Streamlit 1.58 bug)
+    # 球队详情请求 (session_state)
     team_code = None
-
-    if "selected_team" in st.session_state and st.session_state["selected_team"]:
-        team_code = str(st.session_state["selected_team"])
+    raw = st.session_state.get("selected_team")
+    if raw and isinstance(raw, str):
+        team_code = raw
         st.session_state["selected_team"] = None
 
     if team_code:
         from web.detail_view import show_team_detail
         store = st.session_state.store
-        code = str(team_code).upper()
+        code = team_code.upper()
         team = store.get_team_by_code(code)
         if team:
             show_team_detail(team)
