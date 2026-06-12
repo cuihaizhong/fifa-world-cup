@@ -17,8 +17,10 @@ def inject_theme():
         background-color: {THEME['bg_dark']};
     }}
 
-    /* === 隐藏默认工具栏 === */
-    header[data-testid="stHeader"] {{ display: none !important; }}
+    /* === 隐藏默认工具栏 (保留 header 确保侧边栏展开按钮可用) === */
+    [data-testid="stHeader"] {{
+        background: {THEME['bg_dark']} !important;
+    }}
     [data-testid="stToolbar"] {{ display: none !important; }}
     .stDeployButton {{ display: none !important; }}
     #MainMenu {{ visibility: hidden !important; }}
