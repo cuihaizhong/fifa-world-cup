@@ -138,34 +138,39 @@ def show():
     # === TABBED BAIDU DATA ===
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📋 赛程", "👥 阵容", "📊 资料", "🏅 历史成绩", "📈 Elo分析"])
 
-    # --- TAB 1: 赛程 ---
+    # --- TAB 1: 赛程 (本系统官方赛程) ---
     with tab1:
-        matches = baidu_data.get("matches", [])
-        schedule_raw = baidu_data.get("schedule_raw", "")
-        if matches:
-            for m in matches:
-                render_match_row(m)
-        elif schedule_raw:
-            st.text(schedule_raw[:2000])
+        all_matches = store.get_all_matches()
+        team_matches = [m for m in all_matches
+                      if m.home_team and m.away_team
+                      and (m.home_team.fifa_code == team.fifa_code
+                           or m.away_team.fifa_code == team.fifa_code)]
+        if team_matches:
+            for m in team_matches:
+                is_home = m.home_team.fifa_code == team.fifa_code
+                opponent = m.away_team if is_home else m.home_team
+                opponent_flag = FLAG_MAP.get(opponent.fifa_code, "")
+                st.markdown(f"""
+                <div style="background:{THEME['card_bg']};border-radius:10px;padding:12px 16px;margin:6px 0;
+                            display:flex;align-items:center;justify-content:space-between;font-size:0.95rem;
+                            border-left:3px solid {THEME['primary']};">
+                    <div style="min-width:120px;">
+                        <div style="font-weight:600;color:{THEME['text_primary']};">{m.date.strftime('%m月%d日')}</div>
+                        <div style="color:{THEME['text_secondary']};font-size:0.8rem;">{m.date.strftime('%H:%M')}</div>
+                    </div>
+                    <div style="flex:1;text-align:center;">
+                        <span style="font-weight:600;">{FLAG_MAP.get(m.home_team.fifa_code,'')} {m.home_team.name_cn}</span>
+                        <span style="color:{THEME['primary']};margin:0 10px;font-weight:700;">VS</span>
+                        <span style="font-weight:600;">{FLAG_MAP.get(m.away_team.fifa_code,'')} {m.away_team.name_cn}</span>
+                    </div>
+                    <div style="min-width:160px;text-align:right;">
+                        <div style="color:{THEME['text_secondary']};font-size:0.8rem;">{m.stage.value}</div>
+                        <div style="color:{THEME['text_secondary']};font-size:0.75rem;">🏟️ {m.venue}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
         else:
             st.info("暂无赛程数据")
-            # Show matches from our database for this team
-            all_matches = store.get_all_matches()
-            team_matches = [m for m in all_matches
-                          if m.home_team and m.away_team
-                          and m.home_team.fifa_code == team.fifa_code
-                          or (m.away_team and m.away_team.fifa_code == team.fifa_code)]
-            if team_matches:
-                st.caption("以下为本系统赛程数据：")
-                for m in team_matches:
-                    st.markdown(f"""
-                    <div style="background:{THEME['card_bg']};border-radius:8px;padding:8px 14px;margin:4px 0;
-                                display:flex;align-items:center;justify-content:space-between;font-size:0.9rem;">
-                        <span style="color:{THEME['text_secondary']};">{m.date.strftime('%m/%d %H:%M')}</span>
-                        <span style="font-weight:600;">{m.home_team.name_cn} vs {m.away_team.name_cn}</span>
-                        <span style="color:{THEME['text_secondary']};font-size:0.8rem;">{m.stage.value} · {m.venue}</span>
-                    </div>
-                    """, unsafe_allow_html=True)
 
     # --- TAB 2: 阵容 ---
     with tab2:
