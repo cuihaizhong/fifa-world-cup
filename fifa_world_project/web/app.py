@@ -49,7 +49,7 @@ def main():
         page_title="2026 世界杯预测",
         page_icon="🏆",
         layout="wide",
-        initial_sidebar_state="auto",
+        initial_sidebar_state="expanded",
     )
 
     inject_theme()
