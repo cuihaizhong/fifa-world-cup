@@ -18,51 +18,39 @@ def match_card(match: Match, show_detail: bool = True):
     home_flag = FLAG_MAP.get(home.fifa_code, "")
     away_flag = FLAG_MAP.get(away.fifa_code, "")
 
-    card_html = f"""
-    <div class="match-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="flex: 1; text-align: right; font-size: 1.1rem; font-weight: 600;">
-                {home_flag} {home.name_cn}
-            </div>
-            <div style="margin: 0 20px; color: {THEME['text_secondary']}; font-size: 0.85rem;">VS</div>
-            <div style="flex: 1; font-size: 1.1rem; font-weight: 600;">
-                {away_flag} {away.name_cn}
-            </div>
-        </div>
-    """
+    lines = []
+    lines.append('<div class="match-card">')
+    lines.append('<div style="display: flex; justify-content: space-between; align-items: center;">')
+    lines.append(f'<div style="flex: 1; text-align: right; font-size: 1.1rem; font-weight: 600;">{home_flag} {home.name_cn}</div>')
+    lines.append(f'<div style="margin: 0 20px; color: {THEME["text_secondary"]}; font-size: 0.85rem;">VS</div>')
+    lines.append(f'<div style="flex: 1; font-size: 1.1rem; font-weight: 600;">{away_flag} {away.name_cn}</div>')
+    lines.append('</div>')
 
     if pred:
-        card_html += f"""
-        <div style="text-align: center; margin-top: 4px; font-size: 0.8rem; color: {THEME['text_secondary']};">
-            {match.stage.value} · {match.venue} · Elo差: {pred.elo_diff:+.0f}
-            <span class="confidence-tag confidence-{
-                'high' if pred.confidence == '高' else 'mid' if pred.confidence == '中' else 'low'
-            }" style="margin-left: 8px;">置信度: {pred.confidence}</span>
-        </div>
-        <div class="progress-container">
-            <div class="progress-win" style="width: {pred.home_win_pct}%;"></div>
-            <div class="progress-draw" style="width: {pred.draw_pct}%;"></div>
-            <div class="progress-lose" style="width: {pred.away_win_pct}%;"></div>
-        </div>
-        <div class="pct-label">
-            <span class="win">胜 {pred.home_win_pct}%</span>
-            <span class="draw">平 {pred.draw_pct}%</span>
-            <span class="lose">负 {pred.away_win_pct}%</span>
-        </div>
-        <div class="score-prediction">⚽ 预测比分: {pred.expected_home_goals} - {pred.expected_away_goals}</div>
-        """
+        conf_cls = 'high' if pred.confidence == '高' else 'mid' if pred.confidence == '中' else 'low'
+        lines.append(f'<div style="text-align: center; margin-top: 4px; font-size: 0.8rem; color: {THEME["text_secondary"]};">')
+        lines.append(f'{match.stage.value} · {match.venue} · Elo差: {pred.elo_diff:+.0f}')
+        lines.append(f'<span class="confidence-tag confidence-{conf_cls}" style="margin-left: 8px;">置信度: {pred.confidence}</span>')
+        lines.append('</div>')
+        lines.append('<div class="progress-container">')
+        lines.append(f'<div class="progress-win" style="width: {pred.home_win_pct}%;"></div>')
+        lines.append(f'<div class="progress-draw" style="width: {pred.draw_pct}%;"></div>')
+        lines.append(f'<div class="progress-lose" style="width: {pred.away_win_pct}%;"></div>')
+        lines.append('</div>')
+        lines.append('<div class="pct-label">')
+        lines.append(f'<span class="win">胜 {pred.home_win_pct}%</span>')
+        lines.append(f'<span class="draw">平 {pred.draw_pct}%</span>')
+        lines.append(f'<span class="lose">负 {pred.away_win_pct}%</span>')
+        lines.append('</div>')
+        lines.append(f'<div class="score-prediction">⚽ 预测比分: {pred.expected_home_goals} - {pred.expected_away_goals}</div>')
     else:
-        card_html += f"""
-        <div style="text-align: center; margin-top: 12px; color: {THEME['text_secondary']}; font-size: 0.9rem;">
-            {match.stage.value} · {match.date.strftime('%m月%d日 %H:%M')} · {match.venue}
-        </div>
-        <div style="text-align: center; margin-top: 4px; color: {THEME['text_secondary']}; font-size: 0.8rem;">
-            暂无预测数据
-        </div>
-        """
+        lines.append(f'<div style="text-align: center; margin-top: 12px; color: {THEME["text_secondary"]}; font-size: 0.9rem;">')
+        lines.append(f'{match.stage.value} · {match.date.strftime("%m月%d日 %H:%M")} · {match.venue}')
+        lines.append('</div>')
+        lines.append(f'<div style="text-align: center; margin-top: 4px; color: {THEME["text_secondary"]}; font-size: 0.8rem;">暂无预测数据</div>')
 
-    card_html += "</div>"
-    st.markdown(card_html, unsafe_allow_html=True)
+    lines.append('</div>')
+    st.markdown('\n'.join(lines), unsafe_allow_html=True)
 
     if show_detail and pred:
         with st.expander(f"📊 {home.name_cn} vs {away.name_cn} 详细数据"):

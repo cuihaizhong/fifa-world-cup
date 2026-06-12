@@ -10,7 +10,7 @@ from data.models import Match, MatchStage, Prediction, Team
 class Store:
     """Wraps SQLite for CRUD operations on teams, matches, and Elo history."""
 
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str = "data/fifa_world.db"):
         self._db_path = db_path
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row

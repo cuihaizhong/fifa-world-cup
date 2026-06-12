@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Database
+*.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Screenshots
+*.png
+*.jpg
+.playwright-mcp/
+
+# OS
+.DS_Store
+Thumbs.db

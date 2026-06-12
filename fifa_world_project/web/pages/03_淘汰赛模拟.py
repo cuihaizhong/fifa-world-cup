@@ -1,4 +1,8 @@
 """Knockout Simulation Page"""
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
@@ -6,6 +10,19 @@ import pandas as pd
 from collections import Counter
 from web.components import footer
 from engine.elo import EloEngine
+from data.store import Store
+from data.seed_data import seed_all
+from engine.predictor import Predictor
+
+# Initialize shared session state
+if "store" not in st.session_state:
+    store = Store()
+    store.init_db()
+    if store.is_empty():
+        seed_all(store)
+    st.session_state.store = store
+if "predictor" not in st.session_state:
+    st.session_state.predictor = Predictor(seed=42)
 
 
 def simulate_knockout_match(team_a, team_b, elo: EloEngine, rng: np.random.RandomState):
