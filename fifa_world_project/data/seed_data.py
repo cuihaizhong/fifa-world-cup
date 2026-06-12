@@ -1,6 +1,6 @@
 """种子数据 — 48 支球队 + 104 场比赛赛程"""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from config import ELO_INIT_TOP, ELO_RANK_STEP
 from data.models import Match, MatchStage, Team
@@ -130,21 +130,104 @@ FLAG_MAP: dict[str, str] = {
 # 3. 常量
 # ======================================================================
 
-VENUES = [
-    "Mexico City", "Guadalajara", "Toronto", "Los Angeles",
-    "New York/New Jersey", "Dallas", "Houston", "San Francisco",
-    "Atlanta", "Seattle", "Miami", "Philadelphia",
-    "Kansas City", "Boston", "Vancouver", "Monterrey",
-]
-
-TIME_SLOTS = ["13:00", "16:00", "19:00", "22:00"]
-GROUP_START = datetime(2026, 6, 11)
-GROUP_PAIRINGS = [(0, 1), (2, 3), (0, 2), (1, 3), (0, 3), (1, 2)]
-
 TBD_TEAM = Team(
     id=0, name="TBD", name_cn="待定", fifa_code="TBD",
     group="", elo_rating=0, fifa_rank=0,
 )
+
+# 官方 2026 世界杯小组赛赛程 (72场)
+# 格式: (日期, 主队CODE, 客队CODE, 组别, 球场)
+GROUP_SCHEDULE = [
+    # === 6月11日 (周四) ===
+    (1,  "2026-06-11 13:00", "MEX", "RSA", "A", "Mexico City"),
+    (2,  "2026-06-11 16:00", "KOR", "CZE", "A", "Guadalajara"),
+    # === 6月12日 (周五) ===
+    (3,  "2026-06-12 13:00", "CAN", "BIH", "B", "Toronto"),
+    (4,  "2026-06-12 16:00", "USA", "PAR", "D", "Los Angeles"),
+    # === 6月13日 (周六) ===
+    (5,  "2026-06-13 13:00", "HAI", "SCO", "C", "Boston"),
+    (6,  "2026-06-13 16:00", "AUS", "TUR", "D", "Vancouver"),
+    (7,  "2026-06-13 19:00", "BRA", "MAR", "C", "New York/New Jersey"),
+    (8,  "2026-06-13 22:00", "QAT", "SUI", "B", "San Francisco"),
+    # === 6月14日 (周日) ===
+    (9,  "2026-06-14 13:00", "CIV", "ECU", "E", "Philadelphia"),
+    (10, "2026-06-14 16:00", "GER", "CUW", "E", "Houston"),
+    (11, "2026-06-14 19:00", "NED", "JPN", "F", "Dallas"),
+    (12, "2026-06-14 22:00", "SWE", "TUN", "F", "Monterrey"),
+    # === 6月15日 (周一) ===
+    (13, "2026-06-15 13:00", "KSA", "URU", "H", "Miami"),
+    (14, "2026-06-15 16:00", "ESP", "CPV", "H", "Atlanta"),
+    (15, "2026-06-15 19:00", "IRN", "NZL", "G", "Los Angeles"),
+    (16, "2026-06-15 22:00", "BEL", "EGY", "G", "Seattle"),
+    # === 6月16日 (周二) ===
+    (17, "2026-06-16 13:00", "FRA", "SEN", "I", "New York/New Jersey"),
+    (18, "2026-06-16 16:00", "IRQ", "NOR", "I", "Boston"),
+    (19, "2026-06-16 19:00", "ARG", "ALG", "J", "Kansas City"),
+    (20, "2026-06-16 22:00", "AUT", "JOR", "J", "San Francisco"),
+    # === 6月17日 (周三) ===
+    (21, "2026-06-17 13:00", "GHA", "PAN", "L", "Toronto"),
+    (22, "2026-06-17 16:00", "ENG", "CRO", "L", "Dallas"),
+    (23, "2026-06-17 19:00", "POR", "COD", "K", "Houston"),
+    (24, "2026-06-17 22:00", "UZB", "COL", "K", "Mexico City"),
+    # === 6月18日 (周四) — 小组第2轮 ===
+    (25, "2026-06-18 13:00", "CZE", "RSA", "A", "Atlanta"),
+    (26, "2026-06-18 16:00", "SUI", "BIH", "B", "Los Angeles"),
+    (27, "2026-06-18 19:00", "CAN", "QAT", "B", "Vancouver"),
+    (28, "2026-06-18 22:00", "MEX", "KOR", "A", "Guadalajara"),
+    # === 6月19日 (周五) ===
+    (29, "2026-06-19 13:00", "BRA", "HAI", "C", "Philadelphia"),
+    (30, "2026-06-19 16:00", "SCO", "MAR", "C", "Boston"),
+    (31, "2026-06-19 19:00", "TUR", "PAR", "D", "San Francisco"),
+    (32, "2026-06-19 22:00", "USA", "AUS", "D", "Seattle"),
+    # === 6月20日 (周六) ===
+    (33, "2026-06-20 13:00", "GER", "CIV", "E", "Toronto"),
+    (34, "2026-06-20 16:00", "ECU", "CUW", "E", "Kansas City"),
+    (35, "2026-06-20 19:00", "NED", "SWE", "F", "Houston"),
+    (36, "2026-06-20 22:00", "TUN", "JPN", "F", "Monterrey"),
+    # === 6月21日 (周日) ===
+    (37, "2026-06-21 13:00", "URU", "CPV", "H", "Miami"),
+    (38, "2026-06-21 16:00", "ESP", "KSA", "H", "Atlanta"),
+    (39, "2026-06-21 19:00", "BEL", "IRN", "G", "Los Angeles"),
+    (40, "2026-06-21 22:00", "NZL", "EGY", "G", "Vancouver"),
+    # === 6月22日 (周一) ===
+    (41, "2026-06-22 13:00", "NOR", "SEN", "I", "New York/New Jersey"),
+    (42, "2026-06-22 16:00", "FRA", "IRQ", "I", "Philadelphia"),
+    (43, "2026-06-22 19:00", "ARG", "AUT", "J", "Dallas"),
+    (44, "2026-06-22 22:00", "JOR", "ALG", "J", "San Francisco"),
+    # === 6月23日 (周二) ===
+    (45, "2026-06-23 13:00", "ENG", "GHA", "L", "Boston"),
+    (46, "2026-06-23 16:00", "PAN", "CRO", "L", "Toronto"),
+    (47, "2026-06-23 19:00", "POR", "UZB", "K", "Houston"),
+    (48, "2026-06-23 22:00", "COL", "COD", "K", "Guadalajara"),
+    # === 6月24日 (周三) — 小组第3轮 (A/B/C组) ===
+    (49, "2026-06-24 16:00", "SCO", "BRA", "C", "Miami"),
+    (50, "2026-06-24 16:00", "MAR", "HAI", "C", "Atlanta"),
+    (51, "2026-06-24 20:00", "SUI", "CAN", "B", "Vancouver"),
+    (52, "2026-06-24 20:00", "BIH", "QAT", "B", "Seattle"),
+    (53, "2026-06-24 20:00", "CZE", "MEX", "A", "Mexico City"),
+    (54, "2026-06-24 20:00", "RSA", "KOR", "A", "Monterrey"),
+    # === 6月25日 (周四) — 小组第3轮 (D/E/F组) ===
+    (55, "2026-06-25 16:00", "CUW", "CIV", "E", "Philadelphia"),
+    (56, "2026-06-25 16:00", "ECU", "GER", "E", "New York/New Jersey"),
+    (57, "2026-06-25 20:00", "JPN", "SWE", "F", "Dallas"),
+    (58, "2026-06-25 20:00", "TUN", "NED", "F", "Kansas City"),
+    (59, "2026-06-25 20:00", "TUR", "USA", "D", "Los Angeles"),
+    (60, "2026-06-25 20:00", "PAR", "AUS", "D", "San Francisco"),
+    # === 6月26日 (周五) — 小组第3轮 (G/H/I组) ===
+    (61, "2026-06-26 16:00", "NOR", "FRA", "I", "Boston"),
+    (62, "2026-06-26 16:00", "SEN", "IRQ", "I", "Toronto"),
+    (63, "2026-06-26 20:00", "EGY", "IRN", "G", "Seattle"),
+    (64, "2026-06-26 20:00", "NZL", "BEL", "G", "Vancouver"),
+    (65, "2026-06-26 20:00", "CPV", "KSA", "H", "Houston"),
+    (66, "2026-06-26 20:00", "URU", "ESP", "H", "Guadalajara"),
+    # === 6月27日 (周六) — 小组第3轮 (J/K/L组) ===
+    (67, "2026-06-27 16:00", "PAN", "ENG", "L", "New York/New Jersey"),
+    (68, "2026-06-27 16:00", "CRO", "GHA", "L", "Philadelphia"),
+    (69, "2026-06-27 20:00", "ALG", "AUT", "J", "Kansas City"),
+    (70, "2026-06-27 20:00", "JOR", "ARG", "J", "Dallas"),
+    (71, "2026-06-27 20:00", "COL", "POR", "K", "Miami"),
+    (72, "2026-06-27 20:00", "COD", "UZB", "K", "Atlanta"),
+]
 
 
 # ======================================================================
@@ -154,19 +237,6 @@ TBD_TEAM = Team(
 def _elo_from_rank(rank: int) -> float:
     """FIFA 排名 -> Elo 初始分"""
     return ELO_INIT_TOP - (rank - 1) * ELO_RANK_STEP
-
-
-def _slot_date(slot_index: int, start_date: datetime) -> datetime:
-    """Return the datetime for a given sequential slot index."""
-    day_offset = slot_index // len(TIME_SLOTS)
-    time_str = TIME_SLOTS[slot_index % len(TIME_SLOTS)]
-    d = start_date + timedelta(days=day_offset)
-    return datetime.fromisoformat(f"{d.date().isoformat()}T{time_str}:00")
-
-
-def _slot_venue(slot_index: int) -> str:
-    """Return the venue for a given sequential slot index (cycles through VENUES)."""
-    return VENUES[slot_index % len(VENUES)]
 
 
 # ======================================================================
@@ -190,49 +260,23 @@ def create_teams() -> list[Team]:
 
 
 # ======================================================================
-# 6. 创建小组赛 — 72 场
+# 6. 创建小组赛 — 72 场 (官方赛程)
 # ======================================================================
 
 def create_group_matches(teams: list[Team]) -> list[Match]:
-    """Generate 72 group stage matches.
-
-    Each of the 12 groups (A-L) plays 6 matches, using pairings:
-    (0,1), (2,3), (0,2), (1,3), (0,3), (1,2).
-
-    Matches are spread across June 11-28, 2026 (18 days x 4 slots = 72),
-    with venues cycling through 16 host cities.
-    """
-    # Build lookup: group_name -> sorted list of teams
-    group_map: dict[str, list[Team]] = {}
-    for t in teams:
-        group_map.setdefault(t.group, []).append(t)
-    for g in group_map:
-        group_map[g].sort(key=lambda t: t.id)
-
+    """根据 2026 世界杯官方赛程创建 72 场小组赛。"""
+    # Build lookup: fifa_code -> Team
+    code_map: dict[str, Team] = {t.fifa_code: t for t in teams}
     matches: list[Match] = []
-    match_id = 0
-    slot_idx = 0
-
-    for group_name in "ABCDEFGHIJKL":
-        g_teams = group_map[group_name]
-        for home_idx, away_idx in GROUP_PAIRINGS:
-            match_id += 1
-            home = g_teams[home_idx]
-            away = g_teams[away_idx]
-
-            match_date = _slot_date(slot_idx, GROUP_START)
-            venue = _slot_venue(slot_idx)
-
-            matches.append(Match(
-                id=match_id,
-                home_team=home,
-                away_team=away,
-                date=match_date,
-                stage=MatchStage.GROUP,
-                venue=venue,
-            ))
-            slot_idx += 1
-
+    for mid, date_str, home_code, away_code, group, venue in GROUP_SCHEDULE:
+        matches.append(Match(
+            id=mid,
+            home_team=code_map[home_code],
+            away_team=code_map[away_code],
+            date=datetime.fromisoformat(date_str),
+            stage=MatchStage.GROUP,
+            venue=venue,
+        ))
     return matches
 
 
@@ -240,44 +284,61 @@ def create_group_matches(teams: list[Team]) -> list[Match]:
 # 7. 创建淘汰赛占位 — 32 场 (match_id 73-104)
 # ======================================================================
 
+# 官方淘汰赛对阵表 (match_id, 日期, 阶段, 球场)
+KNOCKOUT_SCHEDULE = [
+    # === R32: 16 matches (6月28日-7月3日) ===
+    (73, "2026-06-28 13:00", MatchStage.R32, "Los Angeles"),
+    (74, "2026-06-29 13:00", MatchStage.R32, "Boston"),
+    (75, "2026-06-29 16:00", MatchStage.R32, "Monterrey"),
+    (76, "2026-06-29 19:00", MatchStage.R32, "Houston"),
+    (77, "2026-06-30 13:00", MatchStage.R32, "New York/New Jersey"),
+    (78, "2026-06-30 16:00", MatchStage.R32, "Dallas"),
+    (79, "2026-06-30 19:00", MatchStage.R32, "Mexico City"),
+    (80, "2026-07-01 13:00", MatchStage.R32, "Atlanta"),
+    (81, "2026-07-01 16:00", MatchStage.R32, "San Francisco"),
+    (82, "2026-07-01 19:00", MatchStage.R32, "Seattle"),
+    (83, "2026-07-02 13:00", MatchStage.R32, "Toronto"),
+    (84, "2026-07-02 16:00", MatchStage.R32, "Los Angeles"),
+    (85, "2026-07-02 19:00", MatchStage.R32, "Vancouver"),
+    (86, "2026-07-03 13:00", MatchStage.R32, "Miami"),
+    (87, "2026-07-03 16:00", MatchStage.R32, "Kansas City"),
+    (88, "2026-07-03 19:00", MatchStage.R32, "Dallas"),
+    # === R16: 8 matches (7月4日-7月7日) ===
+    (89, "2026-07-04 13:00", MatchStage.R16, "Philadelphia"),
+    (90, "2026-07-04 16:00", MatchStage.R16, "Houston"),
+    (91, "2026-07-05 13:00", MatchStage.R16, "New York/New Jersey"),
+    (92, "2026-07-05 16:00", MatchStage.R16, "Mexico City"),
+    (93, "2026-07-06 13:00", MatchStage.R16, "Dallas"),
+    (94, "2026-07-06 16:00", MatchStage.R16, "Seattle"),
+    (95, "2026-07-07 13:00", MatchStage.R16, "Atlanta"),
+    (96, "2026-07-07 16:00", MatchStage.R16, "Vancouver"),
+    # === QF: 4 matches (7月9日-7月11日) ===
+    (97,  "2026-07-09 16:00", MatchStage.QF, "Boston"),
+    (98,  "2026-07-10 16:00", MatchStage.QF, "Los Angeles"),
+    (99,  "2026-07-11 16:00", MatchStage.QF, "Miami"),
+    (100, "2026-07-11 20:00", MatchStage.QF, "Kansas City"),
+    # === SF: 2 matches (7月14日-7月15日) ===
+    (101, "2026-07-14 20:00", MatchStage.SF, "Dallas"),
+    (102, "2026-07-15 20:00", MatchStage.SF, "Atlanta"),
+    # === Third place (7月18日) ===
+    (103, "2026-07-18 16:00", MatchStage.THIRD, "Miami"),
+    # === Final (7月19日) ===
+    (104, "2026-07-19 16:00", MatchStage.FINAL, "New York/New Jersey"),
+]
+
+
 def create_knockout_slots() -> list[Match]:
-    """Create 32 knockout placeholder matches with TBD teams.
-
-    - R32: 16 matches, June 28 - July 1,   match_id 73-88
-    - R16:  8 matches, July  4 - July 7,   match_id 89-96
-    - QF:   4 matches, July  9 - July 10,  match_id 97-100
-    - SF:   2 matches, July 14 - July 15,  match_id 101-102
-    - Third: 1 match,  July 18,            match_id 103
-    - Final: 1 match,  July 19,            match_id 104
-    """
+    """根据官方淘汰赛对阵表创建 32 场淘汰赛占位。"""
     matches: list[Match] = []
-
-    stages_def: list[tuple[MatchStage, int, str]] = [
-        (MatchStage.R32,   16, "2026-06-28"),
-        (MatchStage.R16,    8, "2026-07-04"),
-        (MatchStage.QF,     4, "2026-07-09"),
-        (MatchStage.SF,     2, "2026-07-14"),
-        (MatchStage.THIRD,  1, "2026-07-18"),
-        (MatchStage.FINAL,  1, "2026-07-19"),
-    ]
-
-    match_id = 72  # will increment to 73 on first iteration
-
-    for stage, count, start_date_str in stages_def:
-        start_date = datetime.fromisoformat(start_date_str)
-        for i in range(count):
-            match_id += 1
-            match_date = _slot_date(i, start_date)
-            venue = _slot_venue(match_id)  # deterministic spread across venues
-            matches.append(Match(
-                id=match_id,
-                home_team=TBD_TEAM,
-                away_team=TBD_TEAM,
-                date=match_date,
-                stage=stage,
-                venue=venue,
-            ))
-
+    for mid, date_str, stage, venue in KNOCKOUT_SCHEDULE:
+        matches.append(Match(
+            id=mid,
+            home_team=TBD_TEAM,
+            away_team=TBD_TEAM,
+            date=datetime.fromisoformat(date_str),
+            stage=stage,
+            venue=venue,
+        ))
     return matches
 
 
