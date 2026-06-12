@@ -26,13 +26,21 @@ def inject_theme():
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏 === */
-    [data-testid="stSidebar"] {{
-        background-color: {THEME['card_bg']};
-        border-right: 1px solid {THEME['border']};
+    /* === 侧边栏：强制始终可见 === */
+    section[data-testid="stSidebar"] {{
+        background-color: {THEME['card_bg']} !important;
+        border-right: 1px solid {THEME['border']} !important;
+        width: 300px !important;
+        min-width: 300px !important;
+        transform: none !important;
     }}
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
+    }}
+    /* 侧边栏收起按钮始终可见 */
+    [data-testid="stSidebarCollapseButton"] {{
+        visibility: visible !important;
+        display: flex !important;
     }}
     /* 侧边栏导航字体加大 */
     [data-testid="stSidebar"] a {{
@@ -259,7 +267,7 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏在手机上缩小宽度 */
+        /* 侧边栏在手机上缩小但仍可见 */
         section[data-testid="stSidebar"] {{
             width: 260px !important;
             min-width: 260px !important;
@@ -443,6 +451,12 @@ def inject_theme():
         /* ---- 详情国旗 ---- */
         .stColumn:first-child [style*="font-size:5rem"] {{
             font-size: 2.5rem !important;
+        }}
+
+        /* ---- 侧边栏 ---- */
+        section[data-testid="stSidebar"] {{
+            width: 230px !important;
+            min-width: 230px !important;
         }}
 
         /* ---- 内容区 ---- */
