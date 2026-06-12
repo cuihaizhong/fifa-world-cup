@@ -133,34 +133,29 @@ def show_team_detail(team):
         honors = history_data.get("honors", []) if isinstance(history_data, dict) else []
 
         if honors:
-            # 解析破碎的 Baidu JSON 荣誉数据
             import re
             joined = "".join(str(h) for h in honors)
-            # 匹配: 标题","list":["年份"... 或 标题","mark_desc":"描述"...
-            entries = re.split(r'\},\{|\},\s*\{', joined)
+            # 匹配: 可选引号 + 标题 + "," + (list|mark_desc) + ":" + 值
+            pattern = r'"?([^"]{1,40}?)",\s*"(list|mark_desc)"\s*:\s*(\[[^\]]*\]|"[^"]*")'
+            matches = re.findall(pattern, joined)
             shown = set()
-            for entry in entries:
-                # 提取标题 (第一个中文/英文名称)
-                title_m = re.match(r'"?([^"]+)"', entry)
-                title = title_m.group(1) if title_m else ""
-                # 去重
+            rendered = 0
+            for raw_title, key, val in matches:
+                # 清理标题中的 JSON 残留字符
+                title = re.sub(r'[\{\}\[\],]', '', raw_title).strip()
                 if not title or title in shown:
                     continue
                 shown.add(title)
+                rendered += 1
 
-                # 提取年份列表
                 years = []
-                year_m = re.search(r'"list"\s*:\s*\[(.*?)\]', entry)
-                if year_m:
-                    years = re.findall(r'"(\d{4})"', year_m.group(1))
+                if key == "list":
+                    years = re.findall(r'"(\d{4})"', val)
 
-                # 提取描述
                 desc = ""
-                desc_m = re.search(r'"mark_desc"\s*:\s*"([^"]*)"', entry)
-                if desc_m:
-                    desc = desc_m.group(1)
+                if key == "mark_desc":
+                    desc = val.strip('"')
 
-                # 构建显示文本
                 parts = [f"🏆 {title}"]
                 if years:
                     parts.append(f"({'、'.join(years)})")
@@ -168,6 +163,9 @@ def show_team_detail(team):
                     parts.append(f"— {desc}")
 
                 st.markdown(f'<div style="background:{THEME["card_bg"]};border-radius:8px;padding:10px 16px;margin:6px 0;border-left:3px solid {THEME["primary"]};">{" ".join(parts)}</div>', unsafe_allow_html=True)
+
+            if rendered == 0:
+                st.info("暂无历史荣誉数据")
         else:
             st.info("暂无历史荣誉数据")
 
