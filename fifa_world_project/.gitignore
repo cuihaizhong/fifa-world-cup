@@ -13,7 +13,9 @@ __pycache__/
 
 # Screenshots
 *.png
+!image/*.png
 *.jpg
+!image/*.jpg
 .playwright-mcp/
 
 # OS
