@@ -195,6 +195,12 @@ def inject_theme():
     .team-chip-flag {{ font-size: 4rem; line-height: 1; }}
     .team-chip-name {{ color: {THEME['text_primary']}; font-size: 1.5rem; font-weight: 500; }}
 
+    /* 首页居中 */
+    .home-center {{
+        display: flex; flex-direction: column; justify-content: center;
+        align-items: center; min-height: 80vh; text-align: center;
+    }}
+
     /* 页脚 */
     .footer {{
         text-align: center; color: {THEME['text_secondary']}; font-size: 0.8rem;

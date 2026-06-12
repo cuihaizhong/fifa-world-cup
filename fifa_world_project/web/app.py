@@ -15,10 +15,7 @@ from engine.predictor import Predictor
 
 
 def render_home():
-    """首页：轮播 + 赛事入口"""
-    st.title("🏆 2026 世界杯预测中心")
-    st.markdown('<p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 8px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>', unsafe_allow_html=True)
-
+    """首页：轮播 + 赛事入口，上下居中"""
     store = st.session_state.store
     all_teams = [t for t in store.get_all_teams() if t.id != 0]
     chips = []
@@ -31,10 +28,14 @@ def render_home():
             f'</a>'
         )
     track_html = "".join(chips) + "".join(chips)
-    st.markdown(
-        f'<div class="team-carousel-wrapper"><div class="team-carousel-track">{track_html}</div></div>',
-        unsafe_allow_html=True
-    )
+
+    st.markdown(f"""
+    <div class="home-center">
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 4px;">🏆 2026 世界杯预测中心</h1>
+        <p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 24px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>
+        <div class="team-carousel-wrapper"><div class="team-carousel-track">{track_html}</div></div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 def main():
@@ -74,10 +75,6 @@ def main():
             <p style="font-size: 0.75rem; color: #8892B0;">加拿大 · 墨西哥 · 美国</p>
         </div>
         """, unsafe_allow_html=True)
-
-        st.divider()
-        st.markdown('<div style="font-size: 0.85rem; color: #8892B0; margin-bottom: 8px;">📋 导航</div>', unsafe_allow_html=True)
-        st.divider()
 
         store = st.session_state.store
         team_count = len(store.get_all_teams())
