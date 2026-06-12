@@ -11,6 +11,8 @@ def inject_theme():
     html, body, .stApp, .stMarkdown, .stMarkdown * {{
         color: {THEME['text_primary']};
     }}
+    html {{ font-size: 16px; }}
+    body {{ font-size: 1rem; }}
     .stApp {{
         background-color: {THEME['bg_dark']};
     }}
@@ -29,6 +31,14 @@ def inject_theme():
     }}
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
+    }}
+    /* 侧边栏导航字体加大 */
+    [data-testid="stSidebar"] a {{
+        font-size: 1.05rem !important;
+        font-weight: 500 !important;
+    }}
+    [data-testid="stSidebar"] p {{
+        font-size: 0.95rem !important;
     }}
 
     /* === 主区域 === */
