@@ -17,14 +17,16 @@ def inject_theme():
         background-color: {THEME['bg_dark']};
     }}
 
-    /* === 隐藏默认工具栏 === */
-    [data-testid="stHeader"] {{ display: none !important; }}
+    /* === 顶部工具栏：深色适配，不隐藏 === */
+    [data-testid="stHeader"] {{
+        background-color: {THEME['bg_dark']};
+    }}
     [data-testid="stToolbar"] {{ display: none !important; }}
     .stDeployButton {{ display: none !important; }}
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏：始终展开，隐藏收放按钮 === */
+    /* === 侧边栏 === */
     [data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
@@ -32,7 +34,7 @@ def inject_theme():
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
     }}
-    /* 隐藏侧边栏收放按钮 (小箭头) */
+    /* 桌面端：隐藏侧边栏收放按钮 (侧边栏常开) */
     [data-testid="stSidebarCollapseButton"] {{ display: none !important; }}
     [data-testid="collapsedControl"] {{ display: none !important; }}
     /* 侧边栏导航字体加大 */
@@ -241,7 +243,13 @@ def inject_theme():
     @media (max-width: 1024px) {{
         /* 侧边栏在小平板上允许关闭 */
         [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
-        [data-testid="collapsedControl"] {{ display: flex !important; }}
+        [data-testid="collapsedControl"] {{
+            display: flex !important;
+            background: {THEME['primary']} !important;
+            color: #fff !important;
+            border-radius: 0 6px 6px 0 !important;
+            padding: 8px 4px !important;
+        }}
 
         /* 列基本堆叠，但 4 列可保留 2 列 */
         [data-testid="column"] {{
@@ -264,9 +272,21 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* ---- 侧边栏：手机端允许收起，浮层式不挤占内容 ---- */
+        /* ---- 侧边栏：手机端允许收起/展开 ---- */
         [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
-        [data-testid="collapsedControl"] {{ display: flex !important; }}
+        [data-testid="collapsedControl"] {{
+            display: flex !important;
+            background: {THEME['primary']} !important;
+            color: #fff !important;
+            border-radius: 0 8px 8px 0 !important;
+            padding: 12px 6px !important;
+            font-size: 1.2rem !important;
+        }}
+        /* 侧边栏在手机上缩小宽度 */
+        section[data-testid="stSidebar"] {{
+            width: 260px !important;
+            min-width: 260px !important;
+        }}
         /* 侧边栏在手机上变窄 + 浮层效果 */
         section[data-testid="stSidebar"] {{
             width: 280px !important;
