@@ -162,18 +162,12 @@ def main():
         st.divider()
         st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
 
-    # 检查球队详情请求 (session state 优先，query param 作后备)
+    # 检查球队详情请求 (仅用 session_state，query_params 有 Streamlit 1.58 bug)
     team_code = None
 
-    # 从 session state (component 点击)
     if "selected_team" in st.session_state and st.session_state["selected_team"]:
         team_code = str(st.session_state["selected_team"])
         st.session_state["selected_team"] = None
-
-    # 从 URL query param
-    if not team_code and "team" in st.query_params:
-        raw = st.query_params["team"]
-        team_code = str(raw) if raw else None
 
     if team_code:
         from web.detail_view import show_team_detail
