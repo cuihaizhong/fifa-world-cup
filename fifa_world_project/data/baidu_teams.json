@@ -1,50 +1,358 @@
 {
-  "MEX": {"team_id": "9c24b86859123a6a7218b5600e65680e", "name_cn": "墨西哥"},
-  "KOR": {"team_id": "e350aa265bc58bf922eb6ec5d3b705f3", "name_cn": "韩国", "world_rank": 25, "asian_rank": 3},
-  "CZE": {"team_id": "bd0c6be1d4f081864fd88755b05c4f49", "name_cn": "捷克"},
-  "RSA": {"team_id": "dc7f9fdc795728d06adc20867070e73b", "name_cn": "南非"},
-  "CAN": {"team_id": "35779c25e9dec553f154e9d6286925e6", "name_cn": "加拿大"},
-  "BIH": {"team_id": "ef7a8c508595fd9083ec6e7ee93820ba", "name_cn": "波黑"},
-  "QAT": {"team_id": "1d55f57a5cdc344f0944d2fba5e82f0a", "name_cn": "卡塔尔"},
-  "SUI": {"team_id": "1692195abf8c7835f4212113975b49a6", "name_cn": "瑞士"},
-  "BRA": {"team_id": "b92535372efd0c6bc7df7b84b9c7b577", "name_cn": "巴西"},
-  "MAR": {"team_id": "b16a9fdf450c58c762b49202c4d13efe", "name_cn": "摩洛哥"},
-  "HAI": {"team_id": "a57cdc7e5410f79bf70d8636b03a3985", "name_cn": "海地"},
-  "SCO": {"team_id": "bd630ae14342fe2fa1b7376b8c467a36", "name_cn": "苏格兰"},
-  "USA": {"team_id": "a09c0a1b5f939e899c2c90239c3061f2", "name_cn": "美国"},
-  "PAR": {"team_id": "13aeb5d36078e7d9a8b2d8ea3c63cd84", "name_cn": "巴拉圭"},
-  "AUS": {"team_id": "ad002317be38a25026110feccea14ed1", "name_cn": "澳大利亚"},
-  "TUR": {"team_id": "11cf940dfd3e5766a4108da1968f8c65", "name_cn": "土耳其"},
-  "GER": {"team_id": "d885ec68c7b46dbfd4a8f6e41d577ba0", "name_cn": "德国"},
-  "CUW": {"team_id": "f304b118f59fd0087bde4807de418c56", "name_cn": "库拉索"},
-  "CIV": {"team_id": "122c4a5024a4a2395071b27ae3c96a9c", "name_cn": "科特迪瓦"},
-  "ECU": {"team_id": "e03d262a641690d6021146f8a1960c55", "name_cn": "厄瓜多尔"},
-  "NED": {"team_id": "e37f589321ffb8ced53d4fb4de96e5ff", "name_cn": "荷兰"},
-  "JPN": {"team_id": "017ebd53c335a35f3ff9c611be8cc5c8", "name_cn": "日本"},
-  "SWE": {"team_id": "b2eb99748b34be973dbd98415cb0a3c7", "name_cn": "瑞典"},
-  "TUN": {"team_id": "18c8a8c7502910e966a80fb74b4274b5", "name_cn": "突尼斯"},
-  "BEL": {"team_id": "265243e3f2e8dd1261e98f372183240f", "name_cn": "比利时"},
-  "EGY": {"team_id": "5482e10c7389489cb9f4c912ff822c04", "name_cn": "埃及"},
-  "IRN": {"team_id": "a57d0fd569253f6bfd9486dd6db9d484", "name_cn": "伊朗"},
-  "NZL": {"team_id": "606320b6c012a17a7a96eba0a95b8e79", "name_cn": "新西兰"},
-  "ESP": {"team_id": "ca0f779e8db617a828a1c886d6beb530", "name_cn": "西班牙"},
-  "CPV": {"team_id": "3cecc3c32bea4f6662753aaedd32cf90", "name_cn": "佛得角"},
-  "KSA": {"team_id": "71193d502f1a0147c8d13f3f78eb1729", "name_cn": "沙特"},
-  "URU": {"team_id": "7582d690648eb69085503eb2a08b5b39", "name_cn": "乌拉圭"},
-  "FRA": {"team_id": "396c35d0620914f054cdb72e46a5f174", "name_cn": "法国", "world_rank": 3, "europe_rank": 2},
-  "SEN": {"team_id": "023fb7a8de59b54f288308c180e292fa", "name_cn": "塞内加尔"},
-  "IRQ": {"team_id": "e44c88e683e0aa9a3c500dc75033dad2", "name_cn": "伊拉克"},
-  "NOR": {"team_id": "71738605c250e55a12624947da9bd247", "name_cn": "挪威"},
-  "ARG": {"team_id": "3d9f26830ac65f2297cc3c1d20487154", "name_cn": "阿根廷"},
-  "ALG": {"team_id": "36ad997d444aae1f0166dfdcb777493a", "name_cn": "阿尔及利亚"},
-  "AUT": {"team_id": "87d2f6f08a43085d31f09472e19edee6", "name_cn": "奥地利"},
-  "JOR": {"team_id": "eb9a7c8d47d75b02bb4156c4f87f17a7", "name_cn": "约旦"},
-  "POR": {"team_id": "cd3b2deb45caa7373a08831e7de0f5ac", "name_cn": "葡萄牙"},
-  "COD": {"team_id": "92a326ca035e2eb1a7af17e3e70ffafd", "name_cn": "刚果(金)"},
-  "UZB": {"team_id": "1291c7890d5108afd39df6db09c7d85a", "name_cn": "乌兹别克斯坦"},
-  "COL": {"team_id": "c1d483bf3bbaf3040980088edde8560f", "name_cn": "哥伦比亚"},
-  "ENG": {"team_id": "b78be5f1faa30defec36cef442b11431", "name_cn": "英格兰"},
-  "CRO": {"team_id": "785dab5ff819d718c38cbb2a0b877a69", "name_cn": "克罗地亚"},
-  "GHA": {"team_id": "e00c50535a28cf7807621db0085a8382", "name_cn": "加纳"},
-  "PAN": {"team_id": "90a5daeba664af01a6f9aeebe3491178", "name_cn": "巴拿马"}
+  "MEX": {
+    "team_id": "9c24b86859123a6a7218b5600e65680e",
+    "name_cn": "墨西哥"
+  },
+  "KOR": {
+    "team_id": "e350aa265bc58bf922eb6ec5d3b705f3",
+    "name_cn": "韩国",
+    "world_rank": 25,
+    "asian_rank": 3
+  },
+  "CZE": {
+    "team_id": "bd0c6be1d4f081864fd88755b05c4f49",
+    "name_cn": "捷克"
+  },
+  "RSA": {
+    "team_id": "dc7f9fdc795728d06adc20867070e73b",
+    "name_cn": "南非"
+  },
+  "CAN": {
+    "team_id": "35779c25e9dec553f154e9d6286925e6",
+    "name_cn": "加拿大"
+  },
+  "BIH": {
+    "team_id": "ef7a8c508595fd9083ec6e7ee93820ba",
+    "name_cn": "波黑"
+  },
+  "QAT": {
+    "team_id": "1d55f57a5cdc344f0944d2fba5e82f0a",
+    "name_cn": "卡塔尔"
+  },
+  "SUI": {
+    "team_id": "1692195abf8c7835f4212113975b49a6",
+    "name_cn": "瑞士"
+  },
+  "BRA": {
+    "team_id": "b92535372efd0c6bc7df7b84b9c7b577",
+    "name_cn": "巴西"
+  },
+  "MAR": {
+    "team_id": "b16a9fdf450c58c762b49202c4d13efe",
+    "name_cn": "摩洛哥"
+  },
+  "HAI": {
+    "team_id": "a57cdc7e5410f79bf70d8636b03a3985",
+    "name_cn": "海地"
+  },
+  "SCO": {
+    "team_id": "bd630ae14342fe2fa1b7376b8c467a36",
+    "name_cn": "苏格兰"
+  },
+  "USA": {
+    "team_id": "a09c0a1b5f939e899c2c90239c3061f2",
+    "name_cn": "美国"
+  },
+  "PAR": {
+    "team_id": "13aeb5d36078e7d9a8b2d8ea3c63cd84",
+    "name_cn": "巴拉圭"
+  },
+  "AUS": {
+    "team_id": "ad002317be38a25026110feccea14ed1",
+    "name_cn": "澳大利亚"
+  },
+  "TUR": {
+    "team_id": "11cf940dfd3e5766a4108da1968f8c65",
+    "name_cn": "土耳其"
+  },
+  "GER": {
+    "team_id": "d885ec68c7b46dbfd4a8f6e41d577ba0",
+    "name_cn": "德国"
+  },
+  "CUW": {
+    "team_id": "f304b118f59fd0087bde4807de418c56",
+    "name_cn": "库拉索"
+  },
+  "CIV": {
+    "team_id": "122c4a5024a4a2395071b27ae3c96a9c",
+    "name_cn": "科特迪瓦"
+  },
+  "ECU": {
+    "team_id": "e03d262a641690d6021146f8a1960c55",
+    "name_cn": "厄瓜多尔"
+  },
+  "NED": {
+    "team_id": "e37f589321ffb8ced53d4fb4de96e5ff",
+    "name_cn": "荷兰"
+  },
+  "JPN": {
+    "team_id": "017ebd53c335a35f3ff9c611be8cc5c8",
+    "name_cn": "日本"
+  },
+  "SWE": {
+    "team_id": "b2eb99748b34be973dbd98415cb0a3c7",
+    "name_cn": "瑞典"
+  },
+  "TUN": {
+    "team_id": "18c8a8c7502910e966a80fb74b4274b5",
+    "name_cn": "突尼斯"
+  },
+  "BEL": {
+    "team_id": "265243e3f2e8dd1261e98f372183240f",
+    "name_cn": "比利时"
+  },
+  "EGY": {
+    "team_id": "5482e10c7389489cb9f4c912ff822c04",
+    "name_cn": "埃及"
+  },
+  "IRN": {
+    "team_id": "a57d0fd569253f6bfd9486dd6db9d484",
+    "name_cn": "伊朗"
+  },
+  "NZL": {
+    "team_id": "606320b6c012a17a7a96eba0a95b8e79",
+    "name_cn": "新西兰"
+  },
+  "ESP": {
+    "team_id": "ca0f779e8db617a828a1c886d6beb530",
+    "name_cn": "西班牙"
+  },
+  "CPV": {
+    "team_id": "3cecc3c32bea4f6662753aaedd32cf90",
+    "name_cn": "佛得角"
+  },
+  "KSA": {
+    "team_id": "71193d502f1a0147c8d13f3f78eb1729",
+    "name_cn": "沙特"
+  },
+  "URU": {
+    "team_id": "7582d690648eb69085503eb2a08b5b39",
+    "name_cn": "乌拉圭"
+  },
+  "FRA": {
+    "team_id": "396c35d0620914f054cdb72e46a5f174",
+    "name_cn": "法国",
+    "world_rank": 3,
+    "europe_rank": 2,
+    "squad": {
+      "coaches": [
+        {
+          "name": "迪迪埃·德尚",
+          "info": "57岁/主教练/法国"
+        },
+        {
+          "name": "盖·斯特凡",
+          "info": "69岁/助理教练/法国"
+        },
+        {
+          "name": "西里尔·莫因",
+          "info": "54岁/体能教练/法国"
+        },
+        {
+          "name": "弗朗克·拉维奥",
+          "info": "52岁/守门员教练/法国"
+        }
+      ],
+      "players": {
+        "前锋": [
+          {
+            "number": "10",
+            "name": "姆巴佩",
+            "club": "皇家马德里",
+            "apps": "35",
+            "goals": "32"
+          },
+          {
+            "number": "11",
+            "name": "奥利塞",
+            "club": "拜仁慕尼黑",
+            "apps": "17",
+            "goals": "7"
+          },
+          {
+            "number": "7",
+            "name": "登贝莱",
+            "club": "巴黎圣日耳曼",
+            "apps": "19",
+            "goals": "3"
+          },
+          {
+            "number": "12",
+            "name": "巴尔科拉",
+            "club": "巴黎圣日耳曼",
+            "apps": "20",
+            "goals": "3"
+          },
+          {
+            "number": "9",
+            "name": "图拉姆",
+            "club": "国际米兰",
+            "apps": "15",
+            "goals": "1"
+          }
+        ],
+        "中场": [
+          {
+            "number": "24",
+            "name": "谢尔基",
+            "club": "曼彻斯特城",
+            "apps": "7",
+            "goals": "2"
+          },
+          {
+            "number": "18",
+            "name": "埃梅里",
+            "club": "巴黎圣日耳曼",
+            "apps": "8",
+            "goals": "0"
+          },
+          {
+            "number": "8",
+            "name": "楚阿梅尼",
+            "club": "皇家马德里",
+            "apps": "22",
+            "goals": "1"
+          },
+          {
+            "number": "14",
+            "name": "拉比奥",
+            "club": "AC米兰",
+            "apps": "28",
+            "goals": "6"
+          },
+          {
+            "number": "13",
+            "name": "坎特",
+            "club": "费内巴切",
+            "apps": "20",
+            "goals": "1"
+          }
+        ],
+        "后卫": [
+          {
+            "number": "17",
+            "name": "萨利巴",
+            "club": "阿森纳",
+            "apps": "17",
+            "goals": "0"
+          },
+          {
+            "number": "4",
+            "name": "于帕梅卡诺",
+            "club": "拜仁慕尼黑",
+            "apps": "21",
+            "goals": "0"
+          },
+          {
+            "number": "5",
+            "name": "孔德",
+            "club": "巴塞罗那",
+            "apps": "26",
+            "goals": "0"
+          },
+          {
+            "number": "15",
+            "name": "科纳特",
+            "club": "利物浦",
+            "apps": "12",
+            "goals": "0"
+          },
+          {
+            "number": "19",
+            "name": "特奥",
+            "club": "利雅得新月",
+            "apps": "25",
+            "goals": "2"
+          }
+        ],
+        "门将": [
+          {
+            "number": "16",
+            "name": "迈尼昂",
+            "club": "AC米兰",
+            "apps": "24",
+            "goals": "0"
+          },
+          {
+            "number": "1",
+            "name": "桑巴",
+            "club": "雷恩",
+            "apps": "1",
+            "goals": "0"
+          },
+          {
+            "number": "23",
+            "name": "里塞",
+            "club": "朗斯",
+            "apps": "0",
+            "goals": "0"
+          }
+        ]
+      }
+    },
+    "info": {
+      "世界排名": 3,
+      "欧洲排名": 2
+    }
+  },
+  "SEN": {
+    "team_id": "023fb7a8de59b54f288308c180e292fa",
+    "name_cn": "塞内加尔"
+  },
+  "IRQ": {
+    "team_id": "e44c88e683e0aa9a3c500dc75033dad2",
+    "name_cn": "伊拉克"
+  },
+  "NOR": {
+    "team_id": "71738605c250e55a12624947da9bd247",
+    "name_cn": "挪威"
+  },
+  "ARG": {
+    "team_id": "3d9f26830ac65f2297cc3c1d20487154",
+    "name_cn": "阿根廷"
+  },
+  "ALG": {
+    "team_id": "36ad997d444aae1f0166dfdcb777493a",
+    "name_cn": "阿尔及利亚"
+  },
+  "AUT": {
+    "team_id": "87d2f6f08a43085d31f09472e19edee6",
+    "name_cn": "奥地利"
+  },
+  "JOR": {
+    "team_id": "eb9a7c8d47d75b02bb4156c4f87f17a7",
+    "name_cn": "约旦"
+  },
+  "POR": {
+    "team_id": "cd3b2deb45caa7373a08831e7de0f5ac",
+    "name_cn": "葡萄牙"
+  },
+  "COD": {
+    "team_id": "92a326ca035e2eb1a7af17e3e70ffafd",
+    "name_cn": "刚果(金)"
+  },
+  "UZB": {
+    "team_id": "1291c7890d5108afd39df6db09c7d85a",
+    "name_cn": "乌兹别克斯坦"
+  },
+  "COL": {
+    "team_id": "c1d483bf3bbaf3040980088edde8560f",
+    "name_cn": "哥伦比亚"
+  },
+  "ENG": {
+    "team_id": "b78be5f1faa30defec36cef442b11431",
+    "name_cn": "英格兰"
+  },
+  "CRO": {
+    "team_id": "785dab5ff819d718c38cbb2a0b877a69",
+    "name_cn": "克罗地亚"
+  },
+  "GHA": {
+    "team_id": "e00c50535a28cf7807621db0085a8382",
+    "name_cn": "加纳"
+  },
+  "PAN": {
+    "team_id": "90a5daeba664af01a6f9aeebe3491178",
+    "name_cn": "巴拿马"
+  }
 }
