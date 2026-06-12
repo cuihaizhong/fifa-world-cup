@@ -25,8 +25,10 @@ API_BASE_URL = "https://api.football-data.org/v4"
 API_KEY = ""  # 填入你的 API Key
 API_CACHE_TTL = 300            # 缓存 5 分钟
 
-# === 数据库 ===
-DB_PATH = "data/fifa_world.db"
+# === 数据库 (使用可写目录，兼容 Streamlit Cloud) ===
+import os
+_IS_CLOUD = os.path.exists("/mount/src")
+DB_PATH = os.path.join("/tmp" if _IS_CLOUD else "data", "fifa_world.db")
 
 # === UI 主题 ===
 THEME = {
