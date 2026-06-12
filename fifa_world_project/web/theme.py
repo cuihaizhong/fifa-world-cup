@@ -18,6 +18,69 @@ def inject_theme():
     [data-testid="stToolbar"] {{
         display: none !important;
     }}
+    /* === Streamlit 原生组件 === */
+    .stSelectbox label, .stDateInput label, .stTextInput label {{
+        color: {THEME['text_secondary']} !important;
+        font-size: 0.85rem !important;
+    }}
+    .stSelectbox [data-baseweb="select"], .stDateInput input {{
+        background-color: {THEME['card_bg']} !important;
+        color: {THEME['text_primary']} !important;
+        border-color: {THEME['border']} !important;
+    }}
+    /* Metric 组件 */
+    [data-testid="stMetricValue"] {{
+        color: {THEME['text_primary']} !important;
+        font-weight: 700 !important;
+    }}
+    [data-testid="stMetricLabel"] {{
+        color: {THEME['text_secondary']} !important;
+    }}
+    /* DataFrame 表格 */
+    [data-testid="stDataFrame"] {{
+        background-color: {THEME['card_bg']} !important;
+        color: {THEME['text_primary']} !important;
+    }}
+    [data-testid="stDataFrame"] th {{
+        color: {THEME['text_secondary']} !important;
+        font-weight: 600 !important;
+    }}
+    [data-testid="stDataFrame"] td {{
+        color: {THEME['text_primary']} !important;
+    }}
+    /* 展开器 Expander */
+    .streamlit-expanderHeader {{
+        color: {THEME['text_primary']} !important;
+        background: {THEME['card_bg']} !important;
+        border-radius: 8px !important;
+    }}
+    .streamlit-expanderContent {{
+        background: {THEME['card_bg']} !important;
+        color: {THEME['text_primary']} !important;
+    }}
+    /* Info/Warning/Success boxes */
+    .stAlert {{
+        background-color: {THEME['card_bg']} !important;
+        color: {THEME['text_primary']} !important;
+        border-color: {THEME['border']} !important;
+    }}
+    /* 分割线 */
+    hr, .stDivider {{
+        border-color: {THEME['border']} !important;
+    }}
+    /* Caption 和 small 文字 */
+    .stCaption, small, .small {{
+        color: {THEME['text_secondary']} !important;
+    }}
+    /* Tab 标签 */
+    button[data-baseweb="tab"] {{
+        color: {THEME['text_secondary']} !important;
+        background: transparent !important;
+    }}
+    button[data-baseweb="tab"][aria-selected="true"] {{
+        color: {THEME['primary']} !important;
+        border-bottom-color: {THEME['primary']} !important;
+    }}
     .stDeployButton {{
         display: none !important;
     }}

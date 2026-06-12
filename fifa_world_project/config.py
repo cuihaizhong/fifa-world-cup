@@ -36,9 +36,9 @@ THEME = {
     "bg_dark": "#0A0E1A",
     "card_bg": "#131832",
     "text_primary": "#FFFFFF",
-    "text_secondary": "#8892B0",
+    "text_secondary": "#B0B8D0",
     "win": "#10B981",
     "draw": "#F59E0B",
     "lose": "#EF4444",
-    "border": "#1E2340",
+    "border": "#2A3050",
 }
