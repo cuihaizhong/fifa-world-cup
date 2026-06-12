@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 import pandas as pd
 from collections import Counter
 from web.theme import inject_theme
-from web.auth import require_auth, show_logout_button
+from web.auth import require_auth
 from web.components import footer
 from engine.elo import EloEngine
 
@@ -72,7 +72,14 @@ def run_tournament_simulation(teams, elo, rng, n_sims=1000):
 
 def show():
     require_auth()
-    show_logout_button()
+
+    with st.sidebar:
+        st.markdown(f"<span style='color:#8892B0;font-size:0.85rem;'>👤 {st.session_state.get('username','')}</span>", unsafe_allow_html=True)
+        if st.button("🚪 退出登录", key="logout_btn_03"):
+            st.session_state["authenticated"] = False
+            st.session_state["username"] = None
+            st.rerun()
+
     store = st.session_state.store
 
     st.subheader("🏆 淘汰赛模拟器")

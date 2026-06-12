@@ -9,7 +9,7 @@ from datetime import date, datetime
 
 from config import DB_PATH
 from web.theme import inject_theme
-from web.auth import require_auth, show_logout_button
+from web.auth import require_auth
 from data.store import Store
 from data.seed_data import seed_all, FLAG_MAP
 from engine.predictor import Predictor
@@ -128,11 +128,22 @@ def main():
     # === Auth gate ===
     require_auth()
 
-    # Logout button at sidebar top
-    show_logout_button()
-
-    # Sidebar
+    # Sidebar (所有侧边栏内容合并在一起)
     with st.sidebar:
+        # 用户信息 + 退出
+        st.markdown(f"""
+        <div style="padding: 8px 0 16px 0;">
+            <span style="color: #8892B0; font-size: 0.85rem;">👤 当前用户</span><br>
+            <span style="color: #0C4AD1; font-weight: 600; font-size: 1rem;">{st.session_state.get('username', '')}</span>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🚪 退出登录", use_container_width=True, key="logout_btn"):
+            st.session_state["authenticated"] = False
+            st.session_state["username"] = None
+            st.rerun()
+
+        st.divider()
+
         st.markdown("""
         <div style="text-align: center; padding: 20px 0;">
             <h1 style="font-size: 2.5rem; margin: 0;">🏆</h1>
