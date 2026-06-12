@@ -1,5 +1,6 @@
 """SQLite storage layer for teams, matches, and Elo history."""
 import json
+import os
 import sqlite3
 from datetime import date, datetime
 from typing import Dict, List, Optional
@@ -11,6 +12,10 @@ class Store:
     """Wraps SQLite for CRUD operations on teams, matches, and Elo history."""
 
     def __init__(self, db_path: str = "data/fifa_world.db"):
+        # Ensure parent directory exists (needed for Streamlit Cloud)
+        parent = os.path.dirname(db_path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
         self._db_path = db_path
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
