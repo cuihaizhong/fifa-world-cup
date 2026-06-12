@@ -456,26 +456,4 @@ def inject_theme():
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-    # 手机端自动收起侧边栏
-    import streamlit.components.v1 as components
-    components.v1.html("""
-    <script>
-    (function() {
-        function handleSidebar() {
-            var isMobile = window.innerWidth < 768;
-            try {
-                var sidebar = window.top.document.querySelector('[data-testid="stSidebar"]');
-                if (!sidebar) return;
-                if (isMobile) {
-                    sidebar.setAttribute('aria-expanded', 'false');
-                } else {
-                    sidebar.setAttribute('aria-expanded', 'true');
-                }
-            } catch(e) {}
-        }
-        setTimeout(handleSidebar, 600);
-        window.addEventListener('resize', handleSidebar);
-    })();
-    </script>
-    """, height=0)
     st.markdown(css, unsafe_allow_html=True)
