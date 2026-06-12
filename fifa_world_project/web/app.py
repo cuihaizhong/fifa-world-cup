@@ -40,10 +40,6 @@ def render_home():
     """, unsafe_allow_html=True)
 
     # 轮播用自定义组件 (iframe)，点击通过 postMessage 传回，不触发页面重载
-    # 用 key 计数器确保选中后重置组件状态
-    if "carousel_key" not in st.session_state:
-        st.session_state["carousel_key"] = 0
-
     selected = components.html(f"""
     <!DOCTYPE html>
     <html>
@@ -94,11 +90,11 @@ def render_home():
     </script>
     </body>
     </html>
-    """, height=200, key=f"team_carousel_{st.session_state['carousel_key']}")
+    """, height=200)
 
-    # 处理球队选择 (从 component 返回)
-    if selected:
-        st.session_state["carousel_key"] += 1
+    # 处理球队选择 (用 _last 去重防止 component 旧值重复触发)
+    if selected and selected != st.session_state.get("_last_carousel_sel"):
+        st.session_state["_last_carousel_sel"] = selected
         st.session_state["selected_team"] = selected
         st.rerun()
 
