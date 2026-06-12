@@ -7,7 +7,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from web.theme import inject_theme
-from web.auth import require_auth
+from web.auth import require_auth, do_logout
 from web.components import team_selector, footer
 from config import DB_PATH
 
@@ -33,9 +33,7 @@ def show():
     with st.sidebar:
         st.markdown(f"<span style='color:#8892B0;font-size:0.85rem;'>👤 {st.session_state.get('username','')}</span>", unsafe_allow_html=True)
         if st.button("🚪 退出登录", key="logout_btn_02"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            st.rerun()
+            do_logout()
 
     store = st.session_state.store
     teams = store.get_all_teams()

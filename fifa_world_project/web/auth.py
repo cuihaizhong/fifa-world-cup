@@ -9,11 +9,18 @@ ACCOUNTS = {
 
 
 def init_auth():
-    """Initialize auth-related session state"""
+    """Initialize auth state — 优先从 URL query param 恢复登录状态（防刷新丢失）"""
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
     if "username" not in st.session_state:
         st.session_state["username"] = None
+
+    # 从 URL query param 恢复登录 (应对页面刷新)
+    if not st.session_state["authenticated"]:
+        saved_user = st.query_params.get("u")
+        if saved_user and saved_user in ACCOUNTS:
+            st.session_state["authenticated"] = True
+            st.session_state["username"] = saved_user
 
 
 def show_login():
@@ -43,24 +50,19 @@ def show_login():
             elif username in ACCOUNTS and ACCOUNTS[username] == password:
                 st.session_state["authenticated"] = True
                 st.session_state["username"] = username
+                # 写入 URL 参数防止刷新丢失登录
+                st.query_params["u"] = username
                 st.rerun()
             else:
                 st.error("❌ 用户名或密码错误")
 
 
-def show_logout_button():
-    """Display logout button and user info in sidebar"""
-    with st.sidebar:
-        st.markdown(f"""
-        <div style="padding: 8px 0;">
-            <span style="color: #8892B0; font-size: 0.85rem;">👤 当前用户</span><br>
-            <span style="color: #0C4AD1; font-weight: 600; font-size: 1rem;">{st.session_state.get('username', '')}</span>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🚪 退出登录", use_container_width=True, key="logout_btn"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            st.rerun()
+def do_logout():
+    """Clear auth state and URL param"""
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = None
+    st.query_params.clear()
+    st.rerun()
 
 
 def require_auth():

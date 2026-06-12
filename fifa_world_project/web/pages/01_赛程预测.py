@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 import streamlit as st
 from datetime import date, timedelta, datetime
 from web.theme import inject_theme
-from web.auth import require_auth
+from web.auth import require_auth, do_logout
 from web.components import match_card, stat_cards, footer
 from engine.predictor import Predictor
 from config import DB_PATH
@@ -32,9 +32,7 @@ def show():
     with st.sidebar:
         st.markdown(f"<span style='color:#8892B0;font-size:0.85rem;'>👤 {st.session_state.get('username','')}</span>", unsafe_allow_html=True)
         if st.button("🚪 退出登录", key="logout_btn_01"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            st.rerun()
+            do_logout()
 
     store = st.session_state.store
     predictor: Predictor = st.session_state.predictor

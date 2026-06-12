@@ -9,7 +9,7 @@ from datetime import date, datetime
 
 from config import DB_PATH
 from web.theme import inject_theme
-from web.auth import require_auth
+from web.auth import require_auth, do_logout
 from data.store import Store
 from data.seed_data import seed_all, FLAG_MAP
 from engine.predictor import Predictor
@@ -138,9 +138,7 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         if st.button("🚪 退出登录", use_container_width=True, key="logout_btn"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            st.rerun()
+            do_logout()
 
         st.divider()
 
