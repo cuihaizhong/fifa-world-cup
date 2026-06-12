@@ -26,10 +26,15 @@ def inject_theme():
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏 === */
+    /* === 侧边栏：始终展开 === */
     section[data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
+        width: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+        transform: none !important;
+        transition: none !important;
     }}
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
@@ -42,14 +47,12 @@ def inject_theme():
     [data-testid="stSidebar"] p {{
         font-size: 0.95rem !important;
     }}
-
-    /* 侧边栏收起/展开按钮始终可见（Streamlit默认hover才显示） */
+    /* 收起/展开按钮隐藏（不需要，侧边栏常开） */
     [data-testid="stSidebarCollapseButton"] {{
-        visibility: visible !important;
+        display: none !important;
     }}
     [data-testid="collapsedControl"] {{
-        display: flex !important;
-        visibility: visible !important;
+        display: none !important;
     }}
 
     /* === 主区域 === */
@@ -268,9 +271,13 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏在手机上稍窄 */
+        /* 侧边栏手机端更窄但始终可见 */
         section[data-testid="stSidebar"] {{
-            max-width: 280px;
+            width: 240px !important;
+            min-width: 240px !important;
+            max-width: 240px !important;
+            transform: none !important;
+            transition: none !important;
         }}
         /* 侧边栏在手机上变窄 + 浮层效果 */
         section[data-testid="stSidebar"] {{
@@ -455,7 +462,11 @@ def inject_theme():
 
         /* ---- 侧边栏 ---- */
         section[data-testid="stSidebar"] {{
-            max-width: 240px;
+            width: 200px !important;
+            min-width: 200px !important;
+            max-width: 200px !important;
+            transform: none !important;
+            transition: none !important;
         }}
 
         /* ---- 内容区 ---- */
