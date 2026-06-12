@@ -284,31 +284,13 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏手机端允许收起(不阻止transform/transition，让Streamlit动画正常工作) */
+        /* 侧边栏手机端缩小不可收起 */
         section[data-testid="stSidebar"] {{
-            width: auto !important;
-            min-width: auto !important;
-            max-width: 280px !important;
-        }}
-        /* 收起/展开按钮手机端可见 + 修正位置 */
-        [data-testid="stSidebarCollapseButton"] {{
-            display: flex !important;
-            position: absolute !important;
-            right: 8px !important;
-            top: 8px !important;
-            left: auto !important;
-            z-index: 100 !important;
-        }}
-        [data-testid="collapsedControl"] {{
-            display: flex !important;
-            position: fixed !important;
-            left: 0 !important;
-            top: 50% !important;
-            z-index: 9999 !important;
-            background: {THEME['primary']} !important;
-            color: #fff !important;
-            border-radius: 0 8px 8px 0 !important;
-            padding: 16px 6px !important;
+            width: 180px !important;
+            min-width: 180px !important;
+            max-width: 180px !important;
+            transform: none !important;
+            transition: none !important;
         }}
 
         /* ---- 内容区 ---- */
@@ -486,30 +468,13 @@ def inject_theme():
             font-size: 2.5rem !important;
         }}
 
-        /* ---- 侧边栏：允许收起，按钮位置修正 ---- */
+        /* ---- 侧边栏：最小宽度 ---- */
         section[data-testid="stSidebar"] {{
-            width: auto !important;
-            min-width: auto !important;
-            max-width: 240px !important;
-        }}
-        [data-testid="stSidebarCollapseButton"] {{
-            display: flex !important;
-            position: absolute !important;
-            right: 6px !important;
-            top: 6px !important;
-            left: auto !important;
-            z-index: 100 !important;
-        }}
-        [data-testid="collapsedControl"] {{
-            display: flex !important;
-            position: fixed !important;
-            left: 0 !important;
-            top: 50% !important;
-            z-index: 9999 !important;
-            background: {THEME['primary']} !important;
-            color: #fff !important;
-            border-radius: 0 6px 6px 0 !important;
-            padding: 12px 4px !important;
+            width: 150px !important;
+            min-width: 150px !important;
+            max-width: 150px !important;
+            transform: none !important;
+            transition: none !important;
         }}
 
         /* ---- 内容区 ---- */

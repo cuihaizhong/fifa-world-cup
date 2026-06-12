@@ -107,6 +107,39 @@ def main():
         st.divider()
         st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
 
+    # 手机端侧边栏开关（浮动按钮，仅 ≤768px 显示）
+    import streamlit.components.v1 as components
+    components.html("""
+    <style>
+    #mst { display:none; position:fixed; bottom:20px; right:20px; z-index:99999;
+           width:48px; height:48px; border-radius:50%; background:#0C4AD1; color:#fff;
+           border:none; font-size:22px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.3);
+           align-items:center; justify-content:center; }
+    @media (max-width:768px) { #mst { display:flex; } }
+    </style>
+    <button id="mst" onclick="
+        var frames = parent.document.querySelectorAll('iframe');
+        var sb = null;
+        function findSidebar(doc) {
+            sb = doc.querySelector('section[data-testid=stSidebar]');
+            if (sb) return;
+            doc.querySelectorAll('iframe').forEach(function(f) {
+                try { if (!sb) findSidebar(f.contentDocument); } catch(e) {}
+            });
+        }
+        findSidebar(parent.document);
+        if (!sb) { this.textContent='?'; return; }
+        var isHidden = sb.offsetWidth < 50;
+        if (isHidden) {
+            sb.style.display = ''; sb.style.width = ''; sb.style.minWidth = ''; sb.style.maxWidth = '';
+            this.textContent = '✕';
+        } else {
+            sb.style.display = 'none';
+            this.textContent = '☰';
+        }
+    ">☰</button>
+    """, height=0)
+
     # 球队详情请求 (session_state 优先，query param 兜底)
     team_code = None
 
