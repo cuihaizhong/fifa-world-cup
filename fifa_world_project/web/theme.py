@@ -32,6 +32,22 @@ def inject_theme():
     [data-testid="stSidebar"] * {{
         color: {THEME['text_primary']};
     }}
+    /* 侧边栏收放按钮 — 确保可见可点击 */
+    [data-testid="collapsedControl"] {{
+        color: {THEME['text_primary']} !important;
+        background: {THEME['card_bg']} !important;
+        border: 1px solid {THEME['border']} !important;
+        border-radius: 0 8px 8px 0 !important;
+        padding: 8px 6px !important;
+        min-height: 40px !important;
+    }}
+    [data-testid="collapsedControl"] svg {{
+        fill: {THEME['text_primary']} !important;
+        width: 20px !important; height: 20px !important;
+    }}
+    [data-testid="collapsedControl"]:hover {{
+        background: {THEME['primary']} !important;
+    }}
     /* 侧边栏导航字体加大 */
     [data-testid="stSidebar"] a {{
         font-size: 1.05rem !important;
