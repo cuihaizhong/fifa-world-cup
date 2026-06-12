@@ -75,16 +75,16 @@ def show_team_detail(team):
         if team_matches:
             for m in team_matches:
                 st.markdown(f"""
-                <div style="background:{THEME['card_bg']};border-radius:10px;padding:12px 16px;margin:6px 0;
+                <div class="detail-match-row" style="background:{THEME['card_bg']};border-radius:10px;padding:12px 16px;margin:6px 0;
                             display:flex;align-items:center;justify-content:space-between;font-size:0.95rem;
                             border-left:3px solid {THEME['primary']};">
-                    <div style="min-width:120px;"><div style="font-weight:600;">{m.date.strftime('%m月%d日')}</div>
+                    <div class="detail-match-date"><div style="font-weight:600;">{m.date.strftime('%m月%d日')}</div>
                         <div style="color:{THEME['text_secondary']};font-size:0.8rem;">{m.date.strftime('%H:%M')}</div></div>
-                    <div style="flex:1;text-align:center;">
+                    <div class="detail-match-teams" style="flex:1;text-align:center;">
                         <span style="font-weight:600;">{FLAG_MAP.get(m.home_team.fifa_code,'')} {m.home_team.name_cn}</span>
                         <span style="color:{THEME['primary']};margin:0 10px;font-weight:700;">VS</span>
                         <span style="font-weight:600;">{FLAG_MAP.get(m.away_team.fifa_code,'')} {m.away_team.name_cn}</span></div>
-                    <div style="min-width:160px;text-align:right;">
+                    <div class="detail-match-info" style="text-align:right;">
                         <div style="color:{THEME['text_secondary']};font-size:0.8rem;">{m.stage.value}</div>
                         <div style="color:{THEME['text_secondary']};font-size:0.75rem;">🏟️ {m.venue}</div></div></div>""", unsafe_allow_html=True)
         else:

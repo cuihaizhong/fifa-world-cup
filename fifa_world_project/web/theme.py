@@ -373,6 +373,24 @@ def inject_theme():
         .footer {{
             font-size: 0.7rem; padding: 12px 0; margin-top: 20px;
         }}
+
+        /* ---- 详情页赛程卡片：竖向排列 ---- */
+        .detail-match-row {{
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 6px; padding: 10px 12px !important;
+        }}
+        .detail-match-date {{
+            min-width: auto !important;
+            display: flex; gap: 8px; align-items: baseline;
+        }}
+        .detail-match-teams {{
+            text-align: left !important; font-size: 0.9rem;
+        }}
+        .detail-match-info {{
+            min-width: auto !important; text-align: left !important;
+            display: flex; gap: 12px;
+        }}
     }}
 
     /* ---------- 小屏手机 (≤480px) ---------- */
