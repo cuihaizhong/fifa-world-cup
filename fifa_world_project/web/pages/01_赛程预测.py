@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 import streamlit as st
 from datetime import date, timedelta, datetime
 from web.theme import inject_theme
+from web.auth import require_auth, show_logout_button
 from web.components import match_card, stat_cards, footer
 from engine.predictor import Predictor
 from config import DB_PATH
@@ -25,6 +26,8 @@ if "predictor" not in st.session_state:
     st.session_state.predictor = Predictor(seed=42)
 
 def show():
+    require_auth()
+    show_logout_button()
     store = st.session_state.store
     predictor: Predictor = st.session_state.predictor
 

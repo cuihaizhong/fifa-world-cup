@@ -8,6 +8,7 @@ from datetime import date, datetime
 
 from config import DB_PATH
 from web.theme import inject_theme
+from web.auth import require_auth, show_logout_button
 from data.store import Store
 from data.seed_data import seed_all, FLAG_MAP
 from engine.predictor import Predictor
@@ -57,6 +58,12 @@ def main():
     # Init predictor
     if "predictor" not in st.session_state:
         st.session_state.predictor = Predictor(seed=42)
+
+    # === Auth gate ===
+    require_auth()
+
+    # Logout button at sidebar top
+    show_logout_button()
 
     # Sidebar
     with st.sidebar:

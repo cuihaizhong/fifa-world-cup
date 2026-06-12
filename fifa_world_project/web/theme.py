@@ -174,7 +174,7 @@ def inject_theme():
         mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
     }}
     .team-carousel-track {{
-        display: flex; gap: 10px; width: max-content;
+        display: flex; gap: 20px; width: max-content;
         animation: carousel-scroll 80s linear infinite;
     }}
     .team-carousel-track:hover {{ animation-play-state: paused; }}
@@ -183,17 +183,17 @@ def inject_theme():
         100% {{ transform: translateX(-50%); }}
     }}
     .team-chip {{
-        display: flex; flex-direction: column; align-items: center; gap: 4px;
-        padding: 10px 14px; background: {THEME['card_bg']};
-        border-radius: 12px; border: 1px solid {THEME['border']};
-        text-decoration: none !important; min-width: 72px; transition: all 0.2s ease;
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        padding: 20px 28px; background: {THEME['card_bg']};
+        border-radius: 16px; border: 2px solid {THEME['border']};
+        text-decoration: none !important; min-width: 144px; transition: all 0.2s ease;
     }}
     .team-chip:hover {{
         border-color: {THEME['primary']}; background: #1a2045;
         transform: translateY(-2px); box-shadow: 0 4px 12px rgba(12,74,209,0.2);
     }}
-    .team-chip-flag {{ font-size: 2rem; line-height: 1; }}
-    .team-chip-name {{ color: {THEME['text_primary']}; font-size: 0.75rem; font-weight: 500; }}
+    .team-chip-flag {{ font-size: 4rem; line-height: 1; }}
+    .team-chip-name {{ color: {THEME['text_primary']}; font-size: 1.5rem; font-weight: 500; }}
 
     /* 页脚 */
     .footer {{

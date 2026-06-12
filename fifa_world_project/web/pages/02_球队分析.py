@@ -7,6 +7,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from web.theme import inject_theme
+from web.auth import require_auth, show_logout_button
 from web.components import team_selector, footer
 from config import DB_PATH
 
@@ -27,6 +28,8 @@ if "predictor" not in st.session_state:
 
 
 def show():
+    require_auth()
+    show_logout_button()
     store = st.session_state.store
     teams = store.get_all_teams()
 
