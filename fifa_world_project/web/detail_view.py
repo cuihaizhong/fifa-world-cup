@@ -41,8 +41,10 @@ def show_team_detail(team):
     baidu_url = scraper.get_team_url(team.fifa_code)
     flag = FLAG_MAP.get(team.fifa_code, "")
 
-    # 返回首页
-    st.markdown(f'<a href="/" target="_self" style="color:{THEME["text_secondary"]};text-decoration:none;font-size:0.85rem;">← 返回首页</a>', unsafe_allow_html=True)
+    # 返回首页 (用 Streamlit button 避免页面重载)
+    if st.button("← 返回首页", key="back_home_btn"):
+        st.query_params.clear()
+        st.rerun()
 
     # === HEADER ===
     col1, col2, col3 = st.columns([1, 3, 1])
