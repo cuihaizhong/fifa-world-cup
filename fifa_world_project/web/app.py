@@ -15,33 +15,33 @@ from engine.predictor import Predictor
 
 
 def render_home():
-    """首页：标题 + 球队下拉搜索"""
+    """首页：标题 + 国旗轮播 (纯CSS，无iframe)"""
     store = st.session_state.store
     all_teams = [t for t in store.get_all_teams() if t.id != 0]
 
-    # 标题居中
-    st.markdown("""
+    # 保留 auth 参数在链接中，防止刷新丢登录
+    u_param = st.session_state.get("username", "")
+
+    # 构建轮播 chip
+    chips = []
+    for t in all_teams:
+        flag = FLAG_MAP.get(t.fifa_code, "")
+        href = f"/?team={t.fifa_code}&u={u_param}" if u_param else f"/?team={t.fifa_code}"
+        chips.append(
+            f'<a href="{href}" target="_self" class="team-chip">'
+            f'<span class="team-chip-flag">{flag}</span>'
+            f'<span class="team-chip-name">{t.name_cn}</span>'
+            f'</a>'
+        )
+    track_html = "".join(chips) + "".join(chips)
+
+    st.markdown(f"""
     <div class="home-center">
         <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 4px;">🏆 2026 世界杯预测中心</h1>
         <p style="color: #8892B0; font-size: 0.9rem; margin-bottom: 24px;">基于 Elo 评分 + 泊松分布的数学预测模型 · 数据驱动 · 仅供参考</p>
+        <div class="team-carousel-wrapper"><div class="team-carousel-track">{track_html}</div></div>
     </div>
     """, unsafe_allow_html=True)
-
-    # 球队搜索下拉
-    team_options = [f"{FLAG_MAP.get(t.fifa_code, '')}  {t.name_cn}  ({t.fifa_code})" for t in all_teams]
-    team_map = {f"{FLAG_MAP.get(t.fifa_code, '')}  {t.name_cn}  ({t.fifa_code})": t.fifa_code for t in all_teams}
-
-    selected_label = st.selectbox(
-        "🔍 选择球队查看详情",
-        options=[""] + team_options,
-        format_func=lambda x: "— 点击搜索球队 —" if x == "" else x,
-        key="team_selector"
-    )
-
-    if selected_label:
-        code = team_map[selected_label]
-        st.session_state["selected_team"] = code
-        st.rerun()
 
 
 def main():
@@ -107,12 +107,20 @@ def main():
         st.divider()
         st.markdown(f'<div style="font-size: 0.7rem; color: #8892B0;">🕐 数据更新: {datetime.now().strftime("%m/%d %H:%M")}<br>📡 API 状态: 离线模式</div>', unsafe_allow_html=True)
 
-    # 球队详情请求 (session_state)
+    # 球队详情请求 (session_state 优先，query param 兜底)
     team_code = None
+
+    # 方式1: selectbox 触发 (session_state)
     raw = st.session_state.get("selected_team")
     if raw and isinstance(raw, str):
         team_code = raw
         st.session_state["selected_team"] = None
+
+    # 方式2: 轮播链接 (query param)
+    if not team_code and "team" in st.query_params:
+        val = st.query_params["team"]
+        if val and isinstance(val, str) and len(val) == 3:
+            team_code = val
 
     if team_code:
         from web.detail_view import show_team_detail
