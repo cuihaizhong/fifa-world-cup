@@ -25,6 +25,20 @@ def init_auth():
 
 def show_login():
     """Display centered login form"""
+    # 登录页隐藏侧边栏
+    st.markdown("""
+    <style>
+    section[data-testid="stSidebar"] {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+    }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    [data-testid="collapsedControl"] { display: none !important; }
+    </style>
+    """, unsafe_allow_html=True)
+
     # 留白
     for _ in range(3):
         st.markdown("<br>", unsafe_allow_html=True)

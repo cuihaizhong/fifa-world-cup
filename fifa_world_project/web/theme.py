@@ -26,7 +26,7 @@ def inject_theme():
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
 
-    /* === 侧边栏：始终展开 === */
+    /* === 侧边栏：桌面端始终展开 === */
     section[data-testid="stSidebar"] {{
         background-color: {THEME['card_bg']};
         border-right: 1px solid {THEME['border']};
@@ -47,12 +47,13 @@ def inject_theme():
     [data-testid="stSidebar"] p {{
         font-size: 0.95rem !important;
     }}
-    /* 收起/展开按钮隐藏（不需要，侧边栏常开） */
-    [data-testid="stSidebarCollapseButton"] {{
+
+    /* 登录页：隐藏侧边栏 */
+    .login-page section[data-testid="stSidebar"] {{
         display: none !important;
-    }}
-    [data-testid="collapsedControl"] {{
-        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
     }}
 
     /* === 主区域 === */
@@ -271,18 +272,20 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* 侧边栏手机端更窄但始终可见 */
+        /* 侧边栏手机端允许收起 */
         section[data-testid="stSidebar"] {{
-            width: 240px !important;
-            min-width: 240px !important;
-            max-width: 240px !important;
+            width: auto !important;
+            min-width: auto !important;
+            max-width: 280px !important;
             transform: none !important;
             transition: none !important;
         }}
-        /* 侧边栏在手机上变窄 + 浮层效果 */
-        section[data-testid="stSidebar"] {{
-            width: 280px !important;
-            min-width: 280px !important;
+        /* 收起/展开按钮手机端可见 */
+        [data-testid="stSidebarCollapseButton"] {{
+            display: flex !important;
+        }}
+        [data-testid="collapsedControl"] {{
+            display: flex !important;
         }}
 
         /* ---- 内容区 ---- */
@@ -460,13 +463,17 @@ def inject_theme():
             font-size: 2.5rem !important;
         }}
 
-        /* ---- 侧边栏 ---- */
+        /* ---- 侧边栏：允许收起 ---- */
         section[data-testid="stSidebar"] {{
-            width: 200px !important;
-            min-width: 200px !important;
-            max-width: 200px !important;
-            transform: none !important;
-            transition: none !important;
+            width: auto !important;
+            min-width: auto !important;
+            max-width: 240px !important;
+        }}
+        [data-testid="stSidebarCollapseButton"] {{
+            display: flex !important;
+        }}
+        [data-testid="collapsedControl"] {{
+            display: flex !important;
         }}
 
         /* ---- 内容区 ---- */
