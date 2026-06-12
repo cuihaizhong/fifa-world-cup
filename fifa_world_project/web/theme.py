@@ -264,9 +264,14 @@ def inject_theme():
         h2 {{ font-size: 1.2rem !important; }}
         h3 {{ font-size: 1rem !important; }}
 
-        /* ---- 侧边栏：手机端允许收起，默认关闭 ---- */
+        /* ---- 侧边栏：手机端允许收起，浮层式不挤占内容 ---- */
         [data-testid="stSidebarCollapseButton"] {{ display: flex !important; }}
         [data-testid="collapsedControl"] {{ display: flex !important; }}
+        /* 侧边栏在手机上变窄 + 浮层效果 */
+        section[data-testid="stSidebar"] {{
+            width: 280px !important;
+            min-width: 280px !important;
+        }}
 
         /* ---- 内容区 ---- */
         .block-container, .stMainBlockContainer, .main {{
@@ -449,42 +454,28 @@ def inject_theme():
         }}
     }}
     </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+    # 手机端自动收起侧边栏
+    import streamlit.components.v1 as components
+    components.v1.html("""
     <script>
     (function() {
-        // 手机端自动收起侧边栏，桌面端保持展开
-        function handleSidebar() {{
+        function handleSidebar() {
             var isMobile = window.innerWidth < 768;
-            var sidebar = parent.document.querySelector('[data-testid="stSidebar"]');
-            if (!sidebar) {{
-                // 在 Streamlit Cloud 嵌套 iframe 中，需要在顶层查找
-                try {{
-                    var topDoc = window.top.document;
-                    sidebar = topDoc.querySelector('[data-testid="stSidebar"]');
-                }} catch(e) {{
-                    // 跨域限制，尝试在当前文档找
-                    sidebar = document.querySelector('[data-testid="stSidebar"]');
-                }}
-            }}
-            if (!sidebar) return;
-            // 手机端收起，桌面端展开
-            if (isMobile) {{
-                sidebar.setAttribute('aria-expanded', 'false');
-            }} else {{
-                sidebar.setAttribute('aria-expanded', 'true');
-            }}
-        }}
-        // 初始化
-        if (document.readyState === 'complete') {{
-            setTimeout(handleSidebar, 500);
-        }} else {{
-            window.addEventListener('load', function() {{ setTimeout(handleSidebar, 800); }});
-        }}
-        // 监听窗口大小变化
+            try {
+                var sidebar = window.top.document.querySelector('[data-testid="stSidebar"]');
+                if (!sidebar) return;
+                if (isMobile) {
+                    sidebar.setAttribute('aria-expanded', 'false');
+                } else {
+                    sidebar.setAttribute('aria-expanded', 'true');
+                }
+            } catch(e) {}
+        }
+        setTimeout(handleSidebar, 600);
         window.addEventListener('resize', handleSidebar);
-        // Streamlit 页面切换后重新处理
-        var obs = new MutationObserver(function() {{ setTimeout(handleSidebar, 300); }});
-        obs.observe(document.body || document.documentElement, {{ childList: true, subtree: true }});
-    }})();
+    })();
     </script>
-    """
+    """, height=0)
     st.markdown(css, unsafe_allow_html=True)
