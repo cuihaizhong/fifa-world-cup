@@ -16,8 +16,8 @@ def init_auth():
         st.session_state["username"] = None
 
     # 从 URL query param 恢复登录 (应对页面刷新)
-    if not st.session_state["authenticated"]:
-        saved_user = st.query_params.get("u")
+    if not st.session_state["authenticated"] and "u" in st.query_params:
+        saved_user = str(st.query_params["u"])
         if saved_user and saved_user in ACCOUNTS:
             st.session_state["authenticated"] = True
             st.session_state["username"] = saved_user
